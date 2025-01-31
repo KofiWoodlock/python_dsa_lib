@@ -135,13 +135,97 @@ class Stack:
     def print(self) -> None:
         print(self.stack)
 
+# linked list - A structure similar to an array but the elements are not stored contiguosly in memory, in fact 
+#               They are linked together via pointers to ones memory address 
+class ListNode:
+    def __init__(self, val: any) -> None:
+            self.val = val
+            self.next = None
+    
+class SinglyLL:
+    def __init__(self) -> None:
+        self.head = None
+        self.tail = None
 
-# linked list - 
-class SignlyLL:
-    pass
+    # Inserts an element at the front (head) of the list 
+    def insertHead(self, val: any) -> None:
+        new_node = ListNode(val)
+
+        if self.__isEmpty():
+            self.head = new_node
+            self.tail = new_node
+            return
+        
+        new_node.next = self.head
+        self.head = new_node
+
+        
+
+    # Inserts an element at the end (tail) of the list 
+    def insertTail(self, val: any) -> None:
+        new_node = ListNode(val)
+
+        if self.__isEmpty():
+            self.head = new_node
+            self.tail = new_node
+            return
+        
+        self.tail.next = new_node
+        self.tail = self.tail.next
+
+    # Removes first (head) element from the list
+    def removeHead(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty list")
+        
+        self.head = self.head.next
+
+    # Removes element at an arbitrary index 
+    def removeAt(self, index: int):
+        i = 0 
+        curr = self.head
+        while i < index and curr:
+            i += 1
+            curr = curr.next
+
+
+    # Checks to see if some element is in the linked list & returns position
+    def find(self, target: any) -> int:
+        index = 1
+        curr = self.head
+        while curr:
+            if curr.val == target:
+                return index
+            else:
+                curr = curr.next
+                index += 1
+        return -1
+
+    def print(self) -> None:
+        curr = self.head
+        while curr != None:
+            print(f"{curr.val}->",end="")
+            curr = curr.next
+        print()
+
+    def __isEmpty(self) -> bool:
+        return not self.head
 
 class DoublyLL:
     pass
 
 class Queue:
     pass
+
+list = SinglyLL()
+list.insertHead(5)
+list.insertHead(6)
+list.insertHead(7)
+list.insertHead(9)
+list.print()
+list.insertTail(100)
+list.print()
+list.removeHead()
+list.print()
+print(list.find(6))
+print(list.find(1000))
