@@ -217,15 +217,13 @@ class DoublyLL:
 class Queue:
     pass
 
-list = SinglyLL()
-list.insertHead(5)
-list.insertHead(6)
-list.insertHead(7)
-list.insertHead(9)
-list.print()
-list.insertTail(100)
-list.print()
-list.removeHead()
-list.print()
-print(list.find(6))
-print(list.find(1000))
+class Deque:
+    pass
+
+class CircularQueue:
+    pass
+
+class PriorityQueue:
+    pass
+
+
