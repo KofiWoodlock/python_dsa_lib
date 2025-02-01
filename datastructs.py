@@ -141,6 +141,7 @@ class ListNode:
     def __init__(self, val: any) -> None:
             self.val = val
             self.next = None
+            self.prev = None
     
 class SinglyLL:
     def __init__(self) -> None:
@@ -158,8 +159,6 @@ class SinglyLL:
         
         new_node.next = self.head
         self.head = new_node
-
-        
 
     # Inserts an element at the end (tail) of the list 
     def insertTail(self, val: any) -> None:
@@ -181,17 +180,16 @@ class SinglyLL:
         self.head = self.head.next
 
     # Removes element at an arbitrary index 
-    def removeAt(self, index: int):
+    def removeAt(self, index: int) -> None:
         i = 0 
         curr = self.head
         while i < index and curr:
             i += 1
             curr = curr.next
 
-
     # Checks to see if some element is in the linked list & returns position
     def find(self, target: any) -> int:
-        index = 1
+        index = 0
         curr = self.head
         while curr:
             if curr.val == target:
@@ -211,8 +209,95 @@ class SinglyLL:
     def __isEmpty(self) -> bool:
         return not self.head
 
+# doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous
+#                      and next node via pointers 
 class DoublyLL:
-    pass
+    def __init__(self) -> None:
+        self.head = None
+        self.tail = None
+        self.length = 0
+    
+    def insertHead(self, val: any) -> None:
+        new_node = ListNode(val)
+        if self.__isEmpty():
+            self.head = new_node
+            self.tail = new_node
+        else:            
+            new_node.next = self.head
+            self.head.prev = new_node
+            self.head = new_node
+        self.length +=1 
+
+    def insertTail(self, val: any) -> None:
+        new_node = ListNode(val)
+        if self.__isEmpty():
+            self.head = new_node
+            self.tail = new_node
+        else:
+            self.tail.next = new_node
+            new_node.prev = self.tail
+            self.tail = new_node
+        self.length += 1
+
+    def insertAt(self, val: any, index: int) -> None:
+        if index < 0 or index > self.length:
+            raise IndexError("Index out of bounds")
+        
+        if index == 0:
+            self.insertHead(val)
+            return
+        elif index == self.length:
+            self.insertTail(val)
+            return
+
+        new_node = ListNode(val)
+        curr = self.head
+        i = 0
+        while i < index -1:
+            curr = curr.next
+            i += 1
+        
+        new_node.next = curr.next
+        new_node.prev = curr
+        if curr.next:
+            curr.next.prev = new_node
+        curr.next = new_node
+        self.length += 1
+        
+    def removeHead(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty list")
+        
+        self.head.next.prev.val = None
+        self.head = self.head.next
+
+    def removeTail(self) -> None:
+        pass
+
+    def removeAt(self) -> None:
+        pass
+
+    def clear(self) -> None:
+        curr = self.head
+        while curr:
+            next_node = curr.next
+            curr.next = None
+            curr.prev = None
+            curr = next_node
+        
+        self.head = None
+        self.tail = None
+        self.length = 0
+
+    def print(self) -> None:
+        curr = self.head
+        while curr != None:
+            print(f"{curr.val}<->",end="")
+            curr = curr.next
+        print()
+
+    def __isEmpty(self) -> bool:
+        return not self.head
 
 class Queue:
     pass
@@ -227,3 +312,14 @@ class PriorityQueue:
     pass
 
 
+dll = DoublyLL()
+dll.insertHead(5)
+dll.insertTail(10)
+dll.insertTail(15)
+dll.insertTail(20)
+dll.print()
+dll.removeHead()
+dll.print()
+dll.clear()
+dll.insertHead(10)
+dll.print()
