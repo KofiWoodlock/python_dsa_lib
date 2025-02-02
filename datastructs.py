@@ -316,7 +316,7 @@ class Queue:
             self.right = self.right.next
         self.length += 1
 
-    def dequeue(self) -> None:
+    def dequeue(self) -> any:
         if self.__isEmpty():
             raise Exception("Cannot dequeue from empty queue")
         
@@ -330,6 +330,12 @@ class Queue:
         self.left = self.left.next
         self.length -= 1
         return val
+    
+    def front(self) -> None:
+        print(self.left.val)
+
+    def end(self) -> None:
+        print(self.right.val) 
 
     def print(self) -> None:
         curr = self.left
@@ -338,7 +344,7 @@ class Queue:
             curr = curr.next
         print()
 
-    def __isEmpty(self):
+    def __isEmpty(self) -> int:
         return self.length == 0
 
 class Deque:
@@ -355,5 +361,3 @@ class BinaryTree:
 
 class Vector:
     pass
-
-
