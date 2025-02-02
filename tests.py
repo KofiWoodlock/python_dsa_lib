@@ -15,5 +15,4 @@ class StackTests(unittest.TestCase):
 
 # Singly linked list test cases:
 class SinglyLLTests(unittest.TestCase):
-    def testInsertHead(self):
-        pass
+    pass

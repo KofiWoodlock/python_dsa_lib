@@ -299,8 +299,47 @@ class DoublyLL:
     def __isEmpty(self) -> bool:
         return not self.head
 
+# Queue - A structure consiting of elements that can be of different types. 
+#         Operates in the first-in-first-out (FIFO) meaning the first element added will be the first element removed
 class Queue:
-    pass
+    def __init__(self) -> None:
+        self.left = self.right = None
+        self.length = 0
+
+    def enqueue(self, val: any) -> None:
+        new_node = ListNode(val)
+        
+        if self.__isEmpty():
+            self.left = self.right = new_node
+        else:
+            self.right.next = new_node
+            self.right = self.right.next
+        self.length += 1
+
+    def dequeue(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot dequeue from empty queue")
+        
+        if self.length == 1:
+            val = self.left.val
+            self.left = self.right = None
+            self.length -= 1
+            return val
+        
+        val = self.left.val
+        self.left = self.left.next
+        self.length -= 1
+        return val
+
+    def print(self) -> None:
+        curr = self.left
+        while curr != None:
+            print(f"{curr.val}->",end="")
+            curr = curr.next
+        print()
+
+    def __isEmpty(self):
+        return self.length == 0
 
 class Deque:
     pass
@@ -311,15 +350,10 @@ class CircularQueue:
 class PriorityQueue:
     pass
 
+class BinaryTree:
+    pass
 
-dll = DoublyLL()
-dll.insertHead(5)
-dll.insertTail(10)
-dll.insertTail(15)
-dll.insertTail(20)
-dll.print()
-dll.removeHead()
-dll.print()
-dll.clear()
-dll.insertHead(10)
-dll.print()
+class Vector:
+    pass
+
+
