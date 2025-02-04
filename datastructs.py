@@ -1,5 +1,3 @@
-import math
-
 # Common & custom data structures interface & implementation (C) KFW 2025 
 
 
