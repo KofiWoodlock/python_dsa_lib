@@ -1,3 +1,5 @@
+import math
+
 # Common & custom data structures interface & implementation (C) KFW 2025 
 
 
@@ -217,6 +219,7 @@ class DoublyLL:
         self.tail = None
         self.length = 0
     
+    # Inserts an element at the head (front) of the linked list 
     def insertHead(self, val: any) -> None:
         new_node = ListNode(val)
         if self.__isEmpty():
@@ -228,6 +231,7 @@ class DoublyLL:
             self.head = new_node
         self.length +=1 
 
+    # Inserts an element at the tail (end) of the linked list
     def insertTail(self, val: any) -> None:
         new_node = ListNode(val)
         if self.__isEmpty():
@@ -239,6 +243,7 @@ class DoublyLL:
             self.tail = new_node
         self.length += 1
 
+    # Inserts an element at a given index 
     def insertAt(self, val: any, index: int) -> None:
         if index < 0 or index > self.length:
             raise IndexError("Index out of bounds")
@@ -264,6 +269,7 @@ class DoublyLL:
         curr.next = new_node
         self.length += 1
         
+    # Removes the element at the head (front) of the linked list
     def removeHead(self) -> None:
         if self.__isEmpty():
             raise Exception("Cannot remove from empty list")
@@ -271,12 +277,15 @@ class DoublyLL:
         self.head.next.prev.val = None
         self.head = self.head.next
 
+    # Removes the element at the tail (end) of the linked list
     def removeTail(self) -> None:
         pass
 
+    # Removes the element at a given index 
     def removeAt(self) -> None:
         pass
 
+    # Removes all elements from the linked list
     def clear(self) -> None:
         curr = self.head
         while curr:
@@ -288,6 +297,18 @@ class DoublyLL:
         self.head = None
         self.tail = None
         self.length = 0
+    
+    # Checks to see if some element is in the linked list & returns position
+    def find(self, target: any) -> int:
+        index = 0
+        curr = self.head
+        while curr:
+            if curr.val == target:
+                return index
+            else:
+                curr = curr.next
+                index += 1
+        return -1
 
     def print(self) -> None:
         curr = self.head
@@ -352,9 +373,55 @@ class Queue:
 
     def __isEmpty(self) -> int:
         return self.length == 0
-
+    
 class Deque:
-    pass
+    def __init__(self) -> None:
+        self.front = None
+        self.back = None
+        self.length = 0
+    
+    def append(self, val: any) -> None:
+        new_node = ListNode(val)
+        if self.__isEmpty():
+            self.front = new_node
+            self.back = new_node
+        else:
+            self.back.next = new_node
+            new_node.prev = self.back
+            self.back = new_node
+        self.length += 1
+
+    def appendLeft(self, val: any) -> None:
+        new_node = ListNode(val)
+        if self.__isEmpty():
+            self.front = new_node
+            self.back = new_node
+        else:            
+            new_node.next = self.front
+            self.front.prev = new_node
+            self.front = new_node
+        self.length +=1
+
+    def pop(self) -> any:
+        pass
+
+    def popLeft(self) -> any:
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty list")
+        
+        val = self.front.val
+        self.front = self.front.next
+        return val
+
+    def print(self) -> None:
+        curr = self.front
+        while curr != None:
+            print(f"{curr.val}<->",end="")
+            curr = curr.next
+        print()
+
+    def __isEmpty(self) -> bool:
+        return not self.front
 
 class CircularQueue:
     pass
@@ -362,28 +429,97 @@ class CircularQueue:
 class PriorityQueue:
     pass
 
+# Helper class for BinaryTree & Binary Search Tree classes 
 class TreeNode:
     def __init__(self, val: any) -> None:
         self.val = val
         self.left = None
         self.right = None
 
+# Binary tree - A subset of graphs in which data is arranged in a tree-like structure
+#               consiting of a root node, branch nodes and leaf nodes. Each node can have
+#               a maximum of two child nodes. 
 class BinaryTree:
     def __init__(self) -> None:
         self.root = None
 
-    def insert(self):
-        pass
+    # Adds a new node to the tree in the next non-complete layer from left to right  
+    def insert(self, val: any) -> None:
+        if self.__isEmpty():
+            self.root = TreeNode(val)   
+            return 
 
-    def remove(self):
+        q = Deque()
+        q.append(self.root)
+
+        while q:
+            curr = q.popLeft()
+            if curr.left:
+                q.append(curr.left)
+            else:
+                curr.left = TreeNode(val)
+                return
+            
+            if curr.right:
+                q.append(curr.right)
+            else:
+                curr.right = TreeNode(val)
+                return 
+
+
+    def remove(self) -> None:
         pass
 
     def search(self):
         pass
     
+    
     def print(self) -> None:
-        pass
+        if self.__isEmpty():
+            print("Tree is empty")
+            return 
+        
+        height = self.__getHeight(self.root)
+        max_width = 2**height
+        level_nodes = [(self.root, max_width // 2)]
 
+        for level in range(height):
+            new_level_nodes = []
+            line = [" "] * max_width
+
+            for node, pos in level_nodes:
+                if node:
+                    line[pos] = str(node.val)
+                    new_level_nodes.append((node.left, pos-2**(height-level-2)))
+                    new_level_nodes.append((node.right, pos+2**(height-level-2)))
+            print("".join(line).rstrip())
+
+            if level < height-1:
+                slash_line = [" "] * max_width
+                for node, pos in level_nodes:
+                    if node and node.left:
+                        slash_line[pos-1] = "/"
+                    if node and node.right:
+                        slash_line[pos+1] = "\\"
+                print("".join(slash_line).rstrip())
+            
+            level_nodes = new_level_nodes
+
+    # Helper function to calculate height of binary tree
+    def __getHeight(self, node) -> int:
+        if not node:
+            return 0
+        return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))
+
+    def __isEmpty(self):
+        return not self.root
+
+
+class BST:
+    def __init__(self):
+        self.root = None
 
 class Vector:
     pass
+
+
