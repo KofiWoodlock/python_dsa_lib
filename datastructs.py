@@ -303,42 +303,48 @@ class DoublyLL:
 #         Operates in the first-in-first-out (FIFO) meaning the first element added will be the first element removed
 class Queue:
     def __init__(self) -> None:
-        self.left = self.right = None
+        self.first = self.last = None
         self.length = 0
 
+    # Adds an item to the front of the queue 
     def enqueue(self, val: any) -> None:
         new_node = ListNode(val)
         
         if self.__isEmpty():
-            self.left = self.right = new_node
+            self.first = self.last = new_node
         else:
-            self.right.next = new_node
-            self.right = self.right.next
+            self.last.next = new_node
+            self.last = self.last.next
         self.length += 1
 
+    # Removes the first item from the queue 
     def dequeue(self) -> any:
         if self.__isEmpty():
             raise Exception("Cannot dequeue from empty queue")
         
         if self.length == 1:
-            val = self.left.val
-            self.left = self.right = None
+            val = self.first.val
+            self.first = self.last = None
             self.length -= 1
             return val
         
-        val = self.left.val
-        self.left = self.left.next
+        val = self.first.val
+        self.first = self.first.next
         self.length -= 1
         return val
     
+    # Prints the first item in the queue
     def front(self) -> None:
-        print(self.left.val)
+        print(self.first.val)
 
+
+    # Prints the last item in the queue
     def end(self) -> None:
-        print(self.right.val) 
+        print(self.last.val) 
 
+    # Prints the entire queue 
     def print(self) -> None:
-        curr = self.left
+        curr = self.first
         while curr != None:
             print(f"{curr.val}->",end="")
             curr = curr.next
@@ -356,8 +362,28 @@ class CircularQueue:
 class PriorityQueue:
     pass
 
+class TreeNode:
+    def __init__(self, val: any) -> None:
+        self.val = val
+        self.left = None
+        self.right = None
+
 class BinaryTree:
-    pass
+    def __init__(self) -> None:
+        self.root = None
+
+    def insert(self):
+        pass
+
+    def remove(self):
+        pass
+
+    def search(self):
+        pass
+    
+    def print(self) -> None:
+        pass
+
 
 class Vector:
     pass
