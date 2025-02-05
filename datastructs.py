@@ -10,64 +10,65 @@ class Array:
         self.size = size
         self.length = 0
 
+    # Appends an element to the end of the array
     def append(self, val) -> None:
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
         
-        if self.isFull():
-            raise Exception("Cannot append to full array")
+        if self.__isFull():
+            raise Exception("Cannot append to full array.")
         
         self.arr[self.length] = val
         self.length += 1
         
-        
+    # Inserts & overwrites an element at a given index within the array 
     def insertAt(self, index: int, val) -> None:
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
 
         self.arr[index] = val
 
+    # Removes an element at a given index from the array
     def removeAt(self, index: int) -> None:
-        if self.isEmpty():
-            raise Exception("Cannot remove from empty array")
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty array.")
         
         if index < 0 or index > self.length:
-            raise IndexError("Index out of range")
+            raise IndexError("Index out of range.")
     
         self.arr[index] = None
         self.__shiftLeft(index)
         self.length -=1
                 
-    
+    # Removes & returns the last element in the array
     def pop(self):
-        if self.isEmpty():
-            raise Exception("Cannot pop from empty array")
+        if self.__isEmpty():
+            raise Exception("Cannot pop from empty array.")
         
         val = self.arr[self.length-1]
         self.arr[self.length-1] = None
         self.length -= 1
         return val
-
-
-    def isEmpty(self) -> bool:
-        return self.length == 0
-
-    def isFull(self) -> bool:
-        return self.length == self.size
     
-    def length(self) -> int:
-        return self.length
-    
-    def size(self) -> int:
-        return self.size
+    # Reverses the array 
+    def reverse(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot reverse empty array.")
+        self.arr[:self.length] = self.arr[self.length-1::-1]
+
 
     def print(self) -> None:
         print(self.arr[:self.length])
 
+    def __isEmpty(self) -> bool:
+        return self.length == 0
+
+    def __isFull(self) -> bool:
+        return self.length == self.size
+
     def __shiftLeft(self, i: int):
         for index in range(i+1, self.size):
             self.arr[index-1] = self.arr[index]
-
 
 # dynamic array - A structure consisting of elements of the same type, identified by an index, 
 #              stored contiguosly in memory. It's size is changeable during runtime
@@ -78,7 +79,7 @@ class DynamicArray:
         self.length = 0
         self.arr = [None] * self.size
 
-
+    # Appends an element to the end of the array
     def append(self, val) -> None:
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
@@ -89,26 +90,59 @@ class DynamicArray:
         self.arr[self.length] = val
         self.length += 1
 
-    def pop(self):
+    # Removes & returns the last element in the array
+    def pop(self) -> any:
+        if self.__isEmpty():
+            raise Exception("Cannot pop from empty array.")
+        
         value = self.arr[self.length-1]
         self.arr[self.length-1] = None
         self.length -= 1
         return value 
     
+    # Inserts & overwrites an element at a given index within the array
+    def insertAt(self, val: any, index: int) -> None:
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
+        
+        if self.__isEmpty() and index > 0:
+            raise Exception("Index specified does not exist as array is empty.")
+        
+        if index < 0 or index > self.length-1:
+            raise IndexError("Index out of bounds.")
+
+        self.arr[index] = val
+
+    # Removes an element at a given index from the array
+    def removeAt(self, val: any, index: int) -> None:
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
+        
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty array.")
+
+        self.arr[index] = None
+        self.length -= 1
+
+    # Reverses the list
+    def reverse(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot reverse empty array.")
+        self.arr[:self.length] = self.arr[self.length-1::-1]
+
+    # Returns an element at a given index 
     def get(self, index: int) -> any:
-        if self.isEmpty():
-            raise IndexError("Cannot use get on empty array")
+        if self.__isEmpty():
+            raise IndexError("Cannot use get on empty array.")
         
         return self.arr[index]
     
     def print(self) -> None:
         print(self.arr[:self.length])
 
-
-    def isEmpty(self) -> bool:
+    def __isEmpty(self) -> bool:
         return self.length == 0
 
-    
     def __resize(self) -> None:
         self.size *= 2
         new_arr = [None] * self.size
@@ -148,7 +182,7 @@ class SinglyLL:
         self.head = None
         self.tail = None
 
-    # Inserts an element at the front (head) of the list 
+    # Inserts an element at the front (head) of the linked list 
     def insertHead(self, val: any) -> None:
         new_node = ListNode(val)
 
@@ -160,7 +194,7 @@ class SinglyLL:
         new_node.next = self.head
         self.head = new_node
 
-    # Inserts an element at the end (tail) of the list 
+    # Inserts an element at the end (tail) of the linked list 
     def insertTail(self, val: any) -> None:
         new_node = ListNode(val)
 
@@ -172,20 +206,35 @@ class SinglyLL:
         self.tail.next = new_node
         self.tail = self.tail.next
 
-    # Removes first (head) element from the list
+    # Removes first (head) element from the linked list
     def removeHead(self) -> None:
         if self.__isEmpty():
-            raise Exception("Cannot remove from empty list")
+            raise Exception("Cannot remove from empty linked list")
         
         self.head = self.head.next
 
-    # Removes element at an arbitrary index 
+    # Removes element at a specified index 
     def removeAt(self, index: int) -> None:
         i = 0 
         curr = self.head
         while i < index and curr:
             i += 1
             curr = curr.next
+
+    # Reverses contents linked list 
+    def reverse(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot reverse empty linked list.")
+        
+        curr = self.head
+        prev = None
+        while curr:
+            next = curr.next 
+            curr.next = prev
+            prev = curr
+            curr = next
+        self.head = prev
+
 
     # Checks to see if some element is in the linked list & returns position
     def find(self, target: any) -> int:
@@ -319,7 +368,7 @@ class DoublyLL:
         return not self.head
 
 # Queue - A structure consiting of elements that can be of different types. 
-#         Operates in the first-in-first-out (FIFO) meaning the first element added will be the first element removed
+#         Operates in the first-in-first-out (FIFO) principle meaning the first element added will be the first element removed
 class Queue:
     def __init__(self) -> None:
         self.first = self.last = None
@@ -371,7 +420,10 @@ class Queue:
 
     def __isEmpty(self) -> int:
         return self.length == 0
-    
+
+# Deque - Short for double ended queue it is a structure consiting of elements that cane be of different types.
+#         It is similar to a queue in the fact it operates in the first-in-first-out (FIFO) principle but differs to a queue
+#         as both ends can act as the first element in the queue i.e elements can be added and removed from the front and back    
 class Deque:
     def __init__(self) -> None:
         self.front = None
@@ -512,12 +564,9 @@ class BinaryTree:
     def __isEmpty(self):
         return not self.root
 
-
 class BST:
     def __init__(self):
         self.root = None
 
 class Vector:
     pass
-
-
