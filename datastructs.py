@@ -1,7 +1,7 @@
 # Common & custom data structures interface & implementation (C) KFW 2025 
 
 
-# static array - A structure consisting of elements of the same type, identified by an index, 
+# static array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is not changeable 
 class Array:
     def __init__(self, size: int, type: any) -> None:
@@ -56,6 +56,9 @@ class Array:
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[self.length-1::-1]
 
+    def get(self, index: int):
+        return self.arr[index]
+
 
     def print(self) -> None:
         print(self.arr[:self.length])
@@ -70,7 +73,7 @@ class Array:
         for index in range(i+1, self.size):
             self.arr[index-1] = self.arr[index]
 
-# dynamic array - A structure consisting of elements of the same type, identified by an index, 
+# dynamic array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is changeable during runtime
 class DynamicArray:
     def __init__(self, type: any) -> None:
@@ -150,7 +153,7 @@ class DynamicArray:
         for i in range(self.length):
             new_arr[i] = self.arr[i]
         self.arr = new_arr
-        
+
 # stack - A structure consiting of elements that can be of different types. 
 #         Operates in the last-in-first-out (LIFO) principle.            
 class Stack:
@@ -401,14 +404,13 @@ class Queue:
         self.length -= 1
         return val
     
-    # Prints the first item in the queue
-    def front(self) -> None:
-        print(self.first.val)
+    # Returns the first item in the queue
+    def getfront(self) -> any:
+        return self.first.val
 
-
-    # Prints the last item in the queue
-    def end(self) -> None:
-        print(self.last.val) 
+    # Returns the last item in the queue 
+    def getRear(self) -> any:
+        return self.last.val
 
     # Prints the entire queue 
     def print(self) -> None:
@@ -473,11 +475,82 @@ class Deque:
     def __isEmpty(self) -> bool:
         return not self.front
 
+# Circular queue - similar to a regular queue except the last element in the queue is connected to
+#                  the first element, forming a circle. A circualr queue still operates in the first-in-first-out (FIFO)
+#                  principle
 class CircularQueue:
-    pass
+    def __init__(self, size: int, ):
+        self.queue = Array()
+
+    # Adds an item to the front of the queue 
+    def enqueue(self, val: any) -> None:
+        pass
+
+    # Removes the first item from the queue 
+    def dequeue(self) -> any:
+        pass
+    
+    # Returns the first item in the queue
+    def getfront(self) -> any:
+        pass
+
+    # Returns the last item in the queue 
+    def getRear(self) -> any:
+        pass
 
 class PriorityQueue:
     pass
+
+# Circular buffer - A structure consisting of elements of the same type, identifiable by an index,
+#                   stored contigously in memory. It's size is not changeable & once the buffer is full
+#                   the oldest data is overwrited starting from the beginning.
+class CircularBuffer:
+    def __init__(self, size: int, type: any) -> None:
+        self.buffer = Array(size, type)
+        self.type = type
+        self.size = size
+        self.first = 0
+
+    def insert(self, val) -> None:
+        if type(val) != self.type:
+            raise TypeError("Value data type does not match specified data type.")
+
+        if self.__isFull():
+            raise MemoryError("Buffer is full.")
+
+        last = (self.first + self.buffer.length) % self.buffer.size
+        self.buffer.insertAt(last, val)
+        self.buffer.length += 1
+
+    def remove(self):
+        if self.__isEmpty():
+            return None
+        
+        val = self.buffer.get(self.first)
+        self.first = (self.first + 1) % self.buffer.size
+        self.buffer.length -= 1
+        return val
+
+    def getFirst(self) -> any:
+        if self.__isEmpty():
+            return None
+        return self.buffer.get(self.first)
+
+    def getLast(self) -> any:
+        if self.__isEmpty():
+            return None
+        last = (self.first + self.buffer.length-1) % self.buffer.size
+        return self.buffer.get(last)
+
+    def print(self):
+        print(self.buffer.print())
+
+    def __isFull(self) -> bool:
+        return self.buffer.length == self.buffer.size
+
+    def __isEmpty(self) -> bool:
+        return self.buffer.length == 0
+
 
 # Helper class for BinaryTree & Binary Search Tree classes 
 class TreeNode:
