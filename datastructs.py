@@ -565,6 +565,10 @@ class TreeNode:
 class BinaryTree:
     def __init__(self) -> None:
         self.root = None
+        self.__preOutput = []
+        self.__inOutput = []
+        self.__postOutput = []
+
 
     # Adds a new node to the tree in the next non-complete layer from left to right  
     def insert(self, val: any) -> None:
@@ -589,12 +593,71 @@ class BinaryTree:
                 curr.right = TreeNode(val)
                 return 
 
+    # Removes a specified element from the tree and replaces it with bottom right-most node  
+    def remove(self, root, val: any) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty tree")
 
-    def remove(self) -> None:
-        pass
+        if not root.left and not root.right:
+            if root.val == val:
+                return None
+            else:
+                return root
 
-    def search(self):
+        q = [root]
+        curr = None
+        targetNode = None
+        # BFS to find deepest node & target node
+        while q:
+            curr = q.pop(0)
+            if curr.val == val:
+                targetNode = curr
+            if curr.left:
+                q.append(curr.left)
+            if curr.right:
+                q.append(curr.right)
+
+        if targetNode:
+            temp = curr.val
+            targetNode.val = temp
+            self.__remDeepest(root, curr)
+
+        return root 
+    
+    def pop(self) -> any:
         pass
+        
+    # Returns a list of nodes in pre-order (root, left, right)
+    def preOrder(self, root) -> list:
+        if not root:
+            return
+
+        self.__preOutput.append(root.val)
+        self.preOrder(root.left)
+        self.preOrder(root.right)
+        return self.__preOutput
+        
+
+    # Returns a list of nodes in-order (left, root, right)
+    def inOrder(self, root) -> list:
+        if not root:
+            return
+
+        self.inOrder(root.left)
+        self.__inOutput.append(root.val)
+        self.inOrder(root.right)
+        return self.__inOutput
+
+    # Returns a list of nodes in post-order (left, right, root)
+    def postOrder(self, root) -> list:
+        if not root:
+            return 
+
+        self.postOrder(root.left)
+        self.postOrder(root.right)
+        self.__postOutput.append(root.val)
+        return self.__postOutput
+
     
     
     def print(self) -> None:
@@ -633,8 +696,33 @@ class BinaryTree:
         if not node:
             return 0
         return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))
+    
+    # Helper function to delete deepest node in binary tree
+    def __remDeepest(self, root, target) -> None:
+        q = [root]
+        while q:
+            curr = q.pop(0)
+            if curr == target:
+                curr = None
+                del target
+                return 
+            
+            if curr.right:
+                if curr.right == target:
+                    curr.right = None
+                    del target
+                    return
+                q.append(curr.right)
+            
+            if curr.left:
+                if curr.left == target:
+                    curr.left = None
+                    del target
+                    return
+                q.append(curr.left)
 
-    def __isEmpty(self):
+
+    def __isEmpty(self) -> bool:
         return not self.root
 
 class BST:
