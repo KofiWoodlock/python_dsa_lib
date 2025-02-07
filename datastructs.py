@@ -559,7 +559,7 @@ class TreeNode:
         self.left = None
         self.right = None
 
-# Binary tree - A subset of graphs in which data is arranged in a tree-like structure
+# Binary tree - A structure in which data is arranged in a tree-like structure
 #               consiting of a root node, branch nodes and leaf nodes. Each node can have
 #               a maximum of two child nodes. 
 class BinaryTree:
@@ -568,6 +568,7 @@ class BinaryTree:
         self.__preOutput = []
         self.__inOutput = []
         self.__postOutput = []
+        self.__levelOutput = []
 
 
     # Adds a new node to the tree in the next non-complete layer from left to right  
@@ -657,8 +658,19 @@ class BinaryTree:
         self.postOrder(root.right)
         self.__postOutput.append(root.val)
         return self.__postOutput
-
     
+    def levelOrder(self, root) -> list:
+        pass
+
+    def maxHeight(self) -> int:
+        pass
+
+    def maxDepth(self) -> int:
+        pass
+
+    def enumerate(self) -> None:
+        pass
+
     
     def print(self) -> None:
         if self.__isEmpty():
@@ -725,9 +737,98 @@ class BinaryTree:
     def __isEmpty(self) -> bool:
         return not self.root
 
+# Binary search tree - A structure similar to a binary tree however the tree has an ordered property.
+#                      Meaning nodes smaller than the root will be inserted into the left subtree 
+#                      whereas nodes larger than the root will be inserted into the right subtree.
 class BST:
     def __init__(self):
         self.root = None
+
+    def insert(self, val: any) -> None:
+        newNode = TreeNode(val)
+
+        if self.__isEmpty():
+            self.root = newNode
+        
+        parent = None
+        curr = self.root
+        while curr:
+            parent = curr
+            if curr.val > val:
+                curr = curr.left
+            elif curr.val < val:
+                curr = curr.right
+            else:
+                return
+        if parent.val > val:
+            parent.left = newNode
+        else:
+            parent.right = newNode
+        return
+    
+    def remove(self, val: any) -> None:
+        pass
+
+    def search(self, val: any) -> bool:
+        pass
+
+    def minVal(self) -> any:
+        pass
+
+    def minVal(self) -> any:
+        pass
+
+    def floor(self) -> None:
+        pass
+
+    def ceil(self) -> None:
+        pass
+
+    def print(self) -> None:
+        if self.__isEmpty():
+            print("Tree is empty")
+            return 
+        
+        height = self.__getHeight(self.root)
+        max_width = 2**height
+        level_nodes = [(self.root, max_width // 2)]
+
+        for level in range(height):
+            new_level_nodes = []
+            line = [" "] * max_width
+
+            for node, pos in level_nodes:
+                if node:
+                    line[pos] = str(node.val)
+                    new_level_nodes.append((node.left, pos-2**(height-level-2)))
+                    new_level_nodes.append((node.right, pos+2**(height-level-2)))
+            print("".join(line).rstrip())
+
+            if level < height-1:
+                slash_line = [" "] * max_width
+                for node, pos in level_nodes:
+                    if node and node.left:
+                        slash_line[pos-1] = "/"
+                    if node and node.right:
+                        slash_line[pos+1] = "\\"
+                print("".join(slash_line).rstrip())
+            
+            level_nodes = new_level_nodes
+
+    # Helper function to calculate height of binary search tree
+    def __getHeight(self, node) -> int:
+        if not node:
+            return 0
+        return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))        
+
+    def __isEmpty(self):
+        return not self.root
+
+class MinHeap:
+    pass
+
+class MaxHeap:
+    pass
 
 class Vector:
     pass
