@@ -20,6 +20,19 @@ class Array:
         
         self.arr[self.length] = val
         self.length += 1
+
+    # Deletes the first occurence of a specified value in the array
+    def delete(self, val) -> None:
+        found = False
+        for i in range(self.length):
+            if found:
+                self.arr[i-1] = self.arr[i]
+            elif self.arr[i] == val:
+                found = True
+        
+        if found:
+            self.length -= 1
+        
         
     # Inserts & overwrites an element at a given index within the array 
     def insertAt(self, index: int, val) -> None:
@@ -56,9 +69,18 @@ class Array:
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[self.length-1::-1]
 
+    def sort(self):
+        pass
+
     def get(self, index: int):
         return self.arr[index]
 
+    # Finds an element in the array and returns its index
+    def find(self, val) -> int:
+        for i in range(self.arr):
+            if self.arr[i] == val:
+                return i
+        return -1 
 
     def print(self) -> None:
         print(self.arr[:self.length])
@@ -498,6 +520,9 @@ class CircularQueue:
     def getRear(self) -> any:
         pass
 
+
+# Priority queue - A subset of the queue data structure that arranges elements based on their priority value.
+#                  Elements with a higher priority are retrieved and removed first                
 class PriorityQueue:
     pass
 
@@ -824,11 +849,29 @@ class BST:
     def __isEmpty(self):
         return not self.root
 
+# MinHeap - A structure in which the root node is the smallest value among its descendant nodes 
+#           And the same property must follow for it's left and right subtrees also.
 class MinHeap:
-    pass
+    def __init__(self):
+        self.heap = []
+
+    def insert(self, val: any) -> None:
+        self.heap.append(val)
+        index = len(self.heap) -1 
+        while index > 0 and self.heap[index-1 // 2] > self.heap[index]:
+            self.heap[index], self.heap[index-1 // 2] = self.heap[index-1 // 2], self.heap[index] 
+            index = (index - 1) // 2
+
+    def delete(self) -> None:
+        pass
+
+    def heapify(self) -> None:
+        pass
 
 class MaxHeap:
     pass
 
+
 class Vector:
     pass
+
