@@ -1,4 +1,4 @@
-# Common & custom data structures interface & implementation (C) KFW 2025 
+# Common & custom data structures, interface & implementation (C) KFW 2025 
 
 
 # static array - A structure consisting of elements of the same type, identifiable by an index, 
@@ -595,7 +595,6 @@ class BinaryTree:
         self.__postOutput = []
         self.__levelOutput = []
 
-
     # Adds a new node to the tree in the next non-complete layer from left to right  
     def insert(self, val: any) -> None:
         if self.__isEmpty():
@@ -620,10 +619,13 @@ class BinaryTree:
                 return 
 
     # Removes a specified element from the tree and replaces it with bottom right-most node  
-    def remove(self, root, val: any) -> None:
+    def remove(self, val: any) -> None:
         if self.__isEmpty():
             raise Exception("Cannot remove from empty tree")
-
+        
+        self.root = self.__remove(self.root, val)
+    
+    def __remove(self, root: TreeNode, val: any) -> TreeNode:
         if not root.left and not root.right:
             if root.val == val:
                 return None
@@ -654,7 +656,10 @@ class BinaryTree:
         pass
         
     # Returns a list of nodes in pre-order (root, left, right)
-    def preOrder(self, root) -> list:
+    def preOrder(self) -> list:
+        return self.__preOrder(self.root)
+
+    def __preOrder(self, root: TreeNode) -> list:
         if not root:
             return
 
@@ -665,7 +670,10 @@ class BinaryTree:
         
 
     # Returns a list of nodes in-order (left, root, right)
-    def inOrder(self, root) -> list:
+    def inOrder(self) -> list:
+        return self.__inOrder(self.root)
+
+    def __inOrder(self, root: TreeNode) -> list:
         if not root:
             return
 
@@ -675,7 +683,10 @@ class BinaryTree:
         return self.__inOutput
 
     # Returns a list of nodes in post-order (left, right, root)
-    def postOrder(self, root) -> list:
+    def postOrder(self) -> list:
+        return self.__postOrder(self.root)
+
+    def __postOrder(self, root: TreeNode) -> list:
         if not root:
             return 
 
@@ -693,10 +704,6 @@ class BinaryTree:
     def maxDepth(self) -> int:
         pass
 
-    def enumerate(self) -> None:
-        pass
-
-    
     def print(self) -> None:
         if self.__isEmpty():
             print("Tree is empty")
@@ -772,7 +779,7 @@ class BST:
     def insert(self, val: any) -> None:
         newNode = TreeNode(val)
 
-        if self.__isEmpty():
+        if self.__isEmpty(): 
             self.root = newNode
         
         parent = None
@@ -792,16 +799,83 @@ class BST:
         return
     
     def remove(self, val: any) -> None:
-        pass
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty tree")
+        self.root = self.__remove(self.root, val)
+    
+    def __remove(self, root: TreeNode, val: any) -> TreeNode:
+        if not root:
+            raise Exception("Element not found in tree")
+
+        if val < root.val:
+            root.left = self.__remove(root.left, val)
+            return root
+        elif val > root.val:
+            root.right = self.__remove(root.right, val)
+            return root
+        
+        if not root.left:
+            return root.right
+        elif not root.right:
+            return root.left
+
+        parent = root
+        successor = root.right
+        while successor.left:
+            parent = successor
+            successor = successor.left
+
+        root.val = successor.val
+        if parent.left == successor:
+            parent.left = successor.right
+        else:
+            parent.right = successor.right
+        
+        return root
 
     def search(self, val: any) -> bool:
-        pass
+        if self.__isEmpty():
+            raise Exception("Cannot search empty tree")
+        return self.__search(self.root, val)
 
-    def minVal(self) -> any:
-        pass
+    def __search(self, root: TreeNode, val: any) -> bool:
+        if not root:
+            return False
 
+        if val < root.val:
+            return self.__search(root.left, val)
+        elif val > root.val:
+            return self.__search(root.right, val)
+        else:
+            return True 
+        
     def minVal(self) -> any:
-        pass
+        if self.__isEmpty():
+            raise Exception("Tree is empty")  
+        return self.__getMinVal(self.root)
+        
+    def __getMinVal(self, root: TreeNode) -> any:
+        if not root:
+            return None
+
+        curr = root
+        while curr.left:
+            curr = curr.left
+        return curr.val
+
+    def maxVal(self) -> any:
+        if self.__isEmpty():
+            raise Exception("Tree is empty")
+        return self.__getMaxVal(self.root)
+    
+    def __getMaxVal(self, root: TreeNode) -> any:
+        if not root:
+            return None
+        
+        curr = root
+        while curr.right:
+            curr = curr.right
+        return curr.val
 
     def floor(self) -> None:
         pass
@@ -846,7 +920,7 @@ class BST:
             return 0
         return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))        
 
-    def __isEmpty(self):
+    def __isEmpty(self) -> bool:
         return not self.root
 
 # MinHeap - A structure in which the root node is the smallest value among its descendant nodes 
