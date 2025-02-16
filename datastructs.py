@@ -877,11 +877,40 @@ class BST:
             curr = curr.right
         return curr.val
 
-    def floor(self) -> None:
-        pass
+    def floor(self, val: int) -> int:
+        if self.__isEmpty():
+            raise Exception("Tree is empty")
+        return self.__floor(self.root, val)
+    
+    def __floor(self, root: TreeNode, val: int) -> int:
+        if not root:
+            return -1
+        
+        if root.val == val:
+            return root.val
+        if root.val > val:
+            return self.__floor(root.left, val)
 
-    def ceil(self) -> None:
-        pass
+        floor = self.__floor(root.right, val)
+        
+        return floor if floor <= val and floor != -1 else root.val
+
+    def ceil(self, val: int) -> int:
+        if self.__isEmpty():
+            raise Exception("Tree is empty")
+        return self.__ceil(self.root, val)
+    
+    def __ceil(self, root: TreeNode, val: int) -> int:
+        if not root:
+            return -1
+        
+        if root.val == val:
+            return root.val
+        if root.val < val:
+            return self.__ceil(root.right, val)
+        ceil = self.__floor(root.left, val)
+        return ceil if ceil >= val else root.val
+        
 
     def print(self) -> None:
         if self.__isEmpty():
@@ -945,7 +974,5 @@ class MinHeap:
 class MaxHeap:
     pass
 
-
 class Vector:
     pass
-
