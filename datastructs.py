@@ -521,11 +521,6 @@ class CircularQueue:
         pass
 
 
-# Priority queue - A subset of the queue data structure that arranges elements based on their priority value.
-#                  Elements with a higher priority are retrieved and removed first                
-class PriorityQueue:
-    pass
-
 # Circular buffer - A structure consisting of elements of the same type, identifiable by an index,
 #                   stored contigously in memory. It's size is not changeable & once the buffer is full
 #                   the oldest data is overwrited starting from the beginning.
@@ -956,23 +951,130 @@ class BST:
 #           And the same property must follow for it's left and right subtrees also.
 class MinHeap:
     def __init__(self):
-        self.heap = []
+        self.heap = [0]
 
-    def insert(self, val: any) -> None:
+    def push(self, val: any) -> None:
         self.heap.append(val)
-        index = len(self.heap) -1 
-        while index > 0 and self.heap[index-1 // 2] > self.heap[index]:
-            self.heap[index], self.heap[index-1 // 2] = self.heap[index-1 // 2], self.heap[index] 
-            index = (index - 1) // 2
+        index = len(self.heap) - 1 
+        while index > 1 and self.heap[index // 2] > self.heap[index]:
+            self.heap[index], self.heap[index // 2] = self.heap[index // 2], self.heap[index] 
+            index = index // 2
 
-    def delete(self) -> None:
-        pass
+    def pop(self) -> any:
+        if len(self.heap) == 1:
+            return None
+        if len(self.heap) == 2:
+            return self.heap.pop()
+        
+        val = self.heap[1]
+        self.heap[1] = self.heap.pop()
+        index = 1
 
-    def heapify(self) -> None:
-        pass
+        while index * 2 < len(self.heap):
+            if 2 * index + 1 < len(self.heap) and \
+            self.heap[2*index+1] < self.heap[2*index] and \
+            self.heap[index] > self.heap[2*index+1]:
+                self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
+                index = 2 * index + 1
+            elif self.heap[index] > self.heap[2*index]:
+                self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
+                index = 2 * index
+            else:
+                break
+        return val 
 
+    def heapify(self, arr: list) -> None:
+        arr.append(arr[0])
+
+        self.heap = arr
+        curr = (len(self.heap)-1) // 2
+        while curr > 0:
+            index = curr
+            while 2*index < len(self.heap):
+                if (2*index+1 < len(self.heap)) and \
+                self.heap[2*index+1] < self.heap[2*index] and \
+                self.heap[index] > self.heap[2*index+1]:
+                    self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
+                    index = 2*index+1
+                elif self.heap[index] > self.heap[2*index]:
+                    self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
+                    index = 2*index
+                else:
+                    break
+            curr -= 1
+
+    def getMin(self) -> any:
+        return self.heap[1]
+
+    def print(self) -> None:
+        print(self.heap[1:])
+
+# MaxHeap - A structure in which the root node is the largest value among its descendant nodes
+#           And the same property must follow for it's left and right subtrees also.
 class MaxHeap:
-    pass
+    def __init__(self) -> None:
+        self.heap = [0]
+
+    def push(self, val: any) -> None:
+        self.heap.append(val)
+        index = len(self.heap) - 1
+        while index > 1 and self.heap[index // 2] < self.heap[index]:
+            self.heap[index], self.heap[index // 2] = self.heap[index // 2], self.heap[index]
+            index = index // 2
+
+    def pop(self) -> any:
+        if len(self.heap) == 1:
+            return None
+        if len(self.heap) == 2:
+            return self.heap.pop()
+        
+        val = self.heap[1]
+        self.heap[1] = self.heap.pop()
+        index = 1
+
+        while 2*index < len(self.heap):
+            if 2*index + 1 < len(self.heap) and \
+            self.heap[2*index+1] > self.heap[2*index] and \
+            self.heap[index] < self.heap[2*index+1]:
+                self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
+                index = 2*index+1
+            elif self.heap[index] < self.heap[2*index]:
+                self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
+                index = 2*index
+            else:
+                break
+        return val
+
+    def heapify(self, arr: list) -> None:
+        arr.append(arr[0])
+        
+        self.heap = arr
+        curr = (len(self.heap)-1) // 2
+        while curr > 0:
+            index = curr
+            while 2*index < len(self.heap):
+                if 2*index+1 < len(self.heap) and \
+                self.heap[2*index+1] > self.heap[2*index] and \
+                self.heap[index] < self.heap[2*index+1]:
+                    self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
+                    index = 2*index+1
+                elif self.heap[index] < self.heap[2*index]:
+                    self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
+                    index = 2*index
+                else:
+                    break
+            curr -=1 
+
+    def getMax(self) -> any:
+        return self.heap[1]
+
+    def print(self) -> None:
+        print(self.heap[1:])
 
 class Vector:
     pass
+
+array = [4, 10, 3, 5, 1]
+heap = MaxHeap()
+heap.heapify(array)
+heap.print()
