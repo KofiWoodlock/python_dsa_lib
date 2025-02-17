@@ -1,10 +1,9 @@
 # Common & custom data structures, interface & implementation (C) KFW 2025 
 
-
 # static array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is not changeable 
 class Array:
-    def __init__(self, size: int, type: any) -> None:
+    def __init__(self, size: int, type: type) -> None:
         self.arr = [None] * size
         self.type = type
         self.size = size
@@ -12,9 +11,7 @@ class Array:
 
     # Appends an element to the end of the array
     def append(self, val) -> None:
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
-        
+        self.__checkType(val)
         if self.__isFull():
             raise Exception("Cannot append to full array.")
         
@@ -33,11 +30,11 @@ class Array:
         if found:
             self.length -= 1
         
-        
     # Inserts & overwrites an element at a given index within the array 
     def insertAt(self, index: int, val) -> None:
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
+        self.__checkType(val)
+        if index < 0 or index >= self.length:
+            raise IndexError("Index out of bounds")
 
         self.arr[index] = val
 
@@ -45,11 +42,9 @@ class Array:
     def removeAt(self, index: int) -> None:
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
-        
         if index < 0 or index > self.length:
             raise IndexError("Index out of range.")
     
-        self.arr[index] = None
         self.__shiftLeft(index)
         self.length -=1
                 
@@ -67,7 +62,7 @@ class Array:
     def reverse(self) -> None:
         if self.__isEmpty():
             raise Exception("Cannot reverse empty array.")
-        self.arr[:self.length] = self.arr[self.length-1::-1]
+        self.arr[:self.length] = self.arr[:self.length][::-1]
 
     def sort(self):
         pass
@@ -77,7 +72,7 @@ class Array:
 
     # Finds an element in the array and returns its index
     def find(self, val) -> int:
-        for i in range(self.arr):
+        for i in range(self.length):
             if self.arr[i] == val:
                 return i
         return -1 
@@ -94,11 +89,15 @@ class Array:
     def __shiftLeft(self, i: int):
         for index in range(i+1, self.size):
             self.arr[index-1] = self.arr[index]
+        
+    def __checkType(self, val) -> None:
+        if type(val) != self.type:
+            raise TypeError(f"Values must be of type {self.type}")
 
 # dynamic array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is changeable during runtime
 class DynamicArray:
-    def __init__(self, type: any) -> None:
+    def __init__(self, type: type) -> None:
         self.type = type
         self.size = 2
         self.length = 0
@@ -126,25 +125,22 @@ class DynamicArray:
         return value 
     
     # Inserts & overwrites an element at a given index within the array
-    def insertAt(self, val: any, index: int) -> None:
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
-        
+    def insertAt(self, val: type, index: int) -> None:
+        self.__checkType(val)
         if self.__isEmpty() and index > 0:
             raise Exception("Index specified does not exist as array is empty.")
-        
         if index < 0 or index > self.length-1:
             raise IndexError("Index out of bounds.")
 
         self.arr[index] = val
 
     # Removes an element at a given index from the array
-    def removeAt(self, val: any, index: int) -> None:
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
-        
+    def removeAt(self, val: type, index: int) -> None:
+        self.__checkType(val)
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
+        if index < 0 or index > self.length-1:
+            raise IndexError("Index out of bounds.")
 
         self.arr[index] = None
         self.length -= 1
@@ -175,6 +171,10 @@ class DynamicArray:
         for i in range(self.length):
             new_arr[i] = self.arr[i]
         self.arr = new_arr
+
+    def __checkType(self, val) -> None:
+        if type(val) != self.type:
+            raise TypeError(f"Values must be of type {self.type}")
 
 # stack - A structure consiting of elements that can be of different types. 
 #         Operates in the last-in-first-out (LIFO) principle.            
@@ -477,7 +477,13 @@ class Deque:
         self.length +=1
 
     def pop(self) -> any:
-        pass
+        if self.__isEmpty():
+            raise Exception("Cannot pop from empty Deque")
+
+        val = self.back.val
+        self.back.prev.next = None
+        self.back = self.back.prev
+        return val
 
     def popLeft(self) -> any:
         if self.__isEmpty():
@@ -1004,7 +1010,10 @@ class MinHeap:
             curr -= 1
 
     def getMin(self) -> any:
-        return self.heap[1]
+        if len(self.heap) >= 1:
+            return self.heap[1]
+        else:
+            raise Exception("Heap is empty")
 
     def print(self) -> None:
         print(self.heap[1:])
@@ -1066,15 +1075,71 @@ class MaxHeap:
             curr -=1 
 
     def getMax(self) -> any:
-        return self.heap[1]
+        if len(self.heap) >= 1:
+            return self.heap[1]
+        else:
+            raise Exception("Heap is empty")
 
     def print(self) -> None:
         print(self.heap[1:])
 
-class Vector:
+# Helper class for Adjacency List class
+class GraphNode:
+    def __init__(self, val: any):
+        self.val = val
+        self.neighbours = []
+
+# Adjacency list - A strucutre that represents graphs 
+#                  using a lists that store a nodes neighbours
+class AdjacencyList:
     pass
 
-array = [4, 10, 3, 5, 1]
-heap = MaxHeap()
-heap.heapify(array)
-heap.print()
+# Matrix - A structure in which elements are arranged in rows and columns
+class Matrix:
+    def __init__(self, rows: int, columns: int) -> None:
+        self.rows = rows
+        self.columns = columns
+        self.matrix = [[0 for c in range(self.columns)] for r in range(self.rows)]
+
+    # Inserts a specified value into a given row and column of the matrix
+    def insert(self, val: any, row: int, column: int) -> None:
+        if row < 0 or row >= self.rows or column < 0 or column >= self.columns:
+            raise IndexError("row or column is out of bounds")
+        self.matrix[row][column] = val
+    
+    # Removes the first occurence of a specified value 
+    def remove(self, val: any) -> None:
+        if len(self.matrix) == 0:
+            raise Exception("Cannot remove from empty matrix")
+
+        for i, row in enumerate(self.matrix):
+            for j, cell in enumerate(row):
+                if cell == val:
+                    self.matrix[i][j] = 0
+                    return 
+        raise Exception(f"{val} does not exist in matrix")
+
+    def print(self) -> None:
+        for row in self.matrix:
+            print(" | ".join(map(str, row)))
+
+# Vector - A one dimensional array typically storing numbers that represent direction and magnitude
+class Vector:
+    def __init__(self, x=0, y=0, z=0) -> None:
+        self.vector = [x, y, z]
+
+    def add(self, v: 'Vector') -> None:
+        for i in range(len(self.vector)):
+            self.vector[i] += v.vector[i]
+
+    def subtract(self, v: 'Vector') -> None:
+        for i in range(len(self.vector)):
+            self.vector[i] -= v.vector[i]
+    
+    def multiply(self, v: 'Vector') -> None:
+        pass
+
+    def print(self) -> None:
+        print(self.vector)
+
+
