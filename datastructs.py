@@ -1,6 +1,6 @@
 # Common & custom data structures, interface & implementation (C) KFW 2025 
 
-# static array - A structure consisting of elements of the same type, identifiable by an index, 
+# Static array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is not changeable 
 class Array:
     def __init__(self, size: int, type: type) -> None:
@@ -94,7 +94,7 @@ class Array:
         if type(val) != self.type:
             raise TypeError(f"Values must be of type {self.type}")
 
-# dynamic array - A structure consisting of elements of the same type, identifiable by an index, 
+# Dynamic array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is changeable during runtime
 class DynamicArray:
     def __init__(self, type: type) -> None:
@@ -150,6 +150,45 @@ class DynamicArray:
         if self.__isEmpty():
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[self.length-1::-1]
+    
+    # Sorts the list in ascending order by default if descending parameter not supplied 
+    def sort(self, descending: bool=False) -> None:     
+        self.__sort(self.arr, 0, self.length)
+        
+        if descending:
+            self.arr.reverse()
+
+    def __sort(self, arr, l, r) -> list:
+        if l < r:
+            m = (l+r) // 2
+            self.__sort(arr, l, m)
+            self.__sort(arr, m+1, r)
+            self.__merge(arr, l, m, r)
+    
+    def __merge(self, arr, left, mid, right) -> list:
+        lsubarr = arr[left: mid+1]
+        rsubarr = arr[mid+1: right+1]
+
+        i = 0
+        j = 0
+        k = left
+        while i<len(lsubarr) and j < len(rsubarr):
+            if lsubarr[i] <= rsubarr[j]:
+                arr[k] = lsubarr[i]
+                i += 1
+            else:
+                arr[k] = rsubarr[j]
+                j += 1
+            k += 1
+        
+        while i < len(lsubarr):
+            arr[k] = lsubarr[i]
+            i += 1
+            k += 1
+        while j < len(rsubarr):
+            arr[k]= rsubarr[j]
+            j += 1
+            k += 1
 
     # Returns an element at a given index 
     def get(self, index: int) -> any:
@@ -157,6 +196,34 @@ class DynamicArray:
             raise IndexError("Cannot use get on empty array.")
         
         return self.arr[index]
+    
+    # reutrns index of first occurence of an element 
+    def index(self, val: any) -> int:
+        for i in range(self.length):
+            if self.arr[i] == val:
+                return i
+        raise ValueError(f"{val} does not exist in the array.")
+
+    # Clears contents of array
+    def clear(self) -> None:
+        if self.__isEmpty():
+            raise Exception("Cannot clear empty array.")
+        
+        for i in range(self.length):
+            self.arr[i] = None
+        self.length = 0
+
+    # Returns the number of occurences of a value
+    def count(self, val: any) -> int:
+        occurences = 0
+        for i in range(self.length):
+            if self.arr[i] == val:
+                occurences += 1
+        return occurences
+    
+    def concatenate(self, array: list) -> None:
+        for e in array:
+            self.append(e)
     
     def print(self) -> None:
         print(self.arr[:self.length])
@@ -176,7 +243,7 @@ class DynamicArray:
         if type(val) != self.type:
             raise TypeError(f"Values must be of type {self.type}")
 
-# stack - A structure consiting of elements that can be of different types. 
+# Stack - A structure consiting of elements that can be of different types. 
 #         Operates in the last-in-first-out (LIFO) principle.            
 class Stack:
     def __init__(self):
@@ -194,7 +261,7 @@ class Stack:
     def print(self) -> None:
         print(self.stack)
 
-# linked list - A structure similar to an array but the elements are not stored contiguosly in memory, in fact 
+# Linked list - A structure similar to an array but the elements are not stored contiguosly in memory, in fact 
 #               They are linked together via pointers to ones memory address 
 class ListNode:
     def __init__(self, val: any) -> None:
@@ -283,7 +350,7 @@ class SinglyLL:
     def __isEmpty(self) -> bool:
         return not self.head
 
-# doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous
+# Doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous
 #                      and next node via pointers 
 class DoublyLL:
     def __init__(self) -> None:
@@ -591,6 +658,7 @@ class TreeNode:
 class BinaryTree:
     def __init__(self) -> None:
         self.root = None
+        self.height = self.__getHeight(self.root)
         self.__preOutput = []
         self.__inOutput = []
         self.__postOutput = []
@@ -628,10 +696,7 @@ class BinaryTree:
     
     def __remove(self, root: TreeNode, val: any) -> TreeNode:
         if not root.left and not root.right:
-            if root.val == val:
-                return None
-            else:
-                return root
+            return None if root.val == val else root
 
         q = [root]
         curr = None
@@ -653,9 +718,37 @@ class BinaryTree:
 
         return root 
     
+    # Returns & Removes the deepest rightmost node in the binary tree 
     def pop(self) -> any:
-        pass
+        if self.__isEmpty():
+            raise Exception("Cannot pop from empty tree")
         
+        if not self.root.left and not self.root.right:
+            val = self.root.val
+            self.root = None
+            return val
+        
+        q = [self.root]
+        parent = None
+        curr = None
+        while q:
+            curr = q.pop(0)
+            if curr.left:
+                parent = curr
+                q.append(curr.left)
+            if curr.right:
+                parent = curr
+                q.append(curr.right)
+        val = curr.val
+        if parent:
+            if parent.right == curr:
+                parent.right = None
+            else:
+                parent.left = None
+                
+        return val
+
+
     # Returns a list of nodes in pre-order (root, left, right)
     def preOrder(self) -> list:
         return self.__preOrder(self.root)
@@ -697,12 +790,6 @@ class BinaryTree:
         return self.__postOutput
     
     def levelOrder(self, root) -> list:
-        pass
-
-    def maxHeight(self) -> int:
-        pass
-
-    def maxDepth(self) -> int:
         pass
 
     def print(self) -> None:
@@ -1142,4 +1229,12 @@ class Vector:
     def print(self) -> None:
         print(self.vector)
 
+# Hashmap - A structure that maps key : value pairs by computing an index using a hash function
+#           The key is unique and immutable and duplicates are not supported 
+class HashMap:
+    def __init__(self, size: int) -> None:
+        self.size = size
+        self.hashmap = [[] for _ in range(self.size)]
 
+    def insert(self, val: any, key: any) -> None:
+        pass
