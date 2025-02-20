@@ -572,7 +572,7 @@ class Deque:
 
 # Circular queue - similar to a regular queue except the last element in the queue is connected to
 #                  the first element, forming a circle. A circualr queue still operates in the first-in-first-out (FIFO)
-#                  principle. The queue is of fixed size
+#                  principle
 class CircularQueue:
     def __init__(self, size: int, type: any ):
         self.size = size
@@ -585,10 +585,13 @@ class CircularQueue:
         if self.__isEmpty():
             self.front = 0
             self.rear = 0
+            self.queue[self.rear] = val
         else:
             self.rear = (self.rear+1) % self.size
-        
-        self.queue[self.rear] = val
+            if self.__isFull():
+                raise Exception("Cannot enqueue, queue is full.")
+            else:
+                self.queue[self.rear] = val
 
     # Removes the first item from the queue 
     def dequeue(self) -> any:
@@ -596,121 +599,75 @@ class CircularQueue:
             raise Exception("Cannot dequeue from empty queue.")
         
         val = self.queue[self.front]
-        self.queue[self.front] = None
-        
-        if self.front == self.rear:
-            self.front = -1
-            self.rear = -1
-        else:
-            self.front = (self.front+1) % self.size
-        
+        self.front = (self.front+1) % self.size
         return val
     
     # Returns the first item in the queue
     def getfront(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Queue is empty")
         return self.queue[self.front]
 
     # Returns the last item in the queue 
     def getRear(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Queue is empty")
         return self.queue[self.rear]
 
     def print(self):
-        if self.__isEmpty():
-            print("Queue is empty")
-            return 
-
-        res = []
-        i = self.front
-        while True:
-            res.append(self.queue[i])
-            if i == self.rear:
-                break
-            i = (i+1) % self.size
-        print(res)
+        print(self.queue[self.front:self.rear])
 
     def __isEmpty(self) -> bool:
-        return self.front == -1
+        return self.front == -1 and self.rear == -1
     
     def __isFull(self) -> bool:
-        return (self.rear + 1) % self.size == self.front
+        return self.rear == self.size
 
 # Circular buffer - A structure consisting of elements of the same type, identifiable by an index,
 #                   stored contigously in memory. It's size is not changeable & once the buffer is full
 #                   the oldest data is overwrited starting from the beginning.
 class CircularBuffer:
     def __init__(self, size: int, type: any) -> None:
+        self.buffer = Array(size, type)
         self.type = type
         self.size = size
-        self.first = -1
-        self.last = -1
-        self.buffer = [None] * self.size
+        self.first = 0
 
-    # Inserts an element into the buffer 
     def insert(self, val) -> None:
-        if not isinstance(val, self.type):
+        if type(val) != self.type:
             raise TypeError("Value data type does not match specified data type.")
 
         if self.__isFull():
-            self.first = (self.first + 1) % self.size
+            raise MemoryError("Buffer is full.")
 
+        last = (self.first + self.buffer.length) % self.buffer.size
+        self.buffer.insertAt(last, val)
+        self.buffer.length += 1
+
+    def remove(self):
         if self.__isEmpty():
-            self.first = 0
-
-        self.last = (self.last + 1) % self.size
-        self.buffer[self.last] = val     
-
-    # Removes the first element added to the buffer
-    def remove(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Buffer is empty.")
+            return None
         
-        val = self.buffer[self.first]
-        self.buffer[self.first] = None
-
-        if self.first == self.last:
-            self.first = -1
-            self.last = -1
-        else:
-            self.first = (self.first + 1) % self.size
-        
+        val = self.buffer.get(self.first)
+        self.first = (self.first + 1) % self.buffer.size
+        self.buffer.length -= 1
         return val
 
-    # Returns the first element in the buffer
     def getFirst(self) -> any:
         if self.__isEmpty():
             return None
-        return self.buffer[self.first]
+        return self.buffer.get(self.first)
 
-    # Returns the last element in the buffer
     def getLast(self) -> any:
         if self.__isEmpty():
             return None
-        return self.buffer[self.last]
+        last = (self.first + self.buffer.length-1) % self.buffer.size
+        return self.buffer.get(last)
 
     def print(self):
-        if self.__isEmpty():
-            print("Buffer is empty")
-            return 
-        
-        result = []
-        i = self.first
-        while True:
-            result.append(self.buffer[i])
-            if i == self.last:
-                break
-            i = (i + 1) % self.size
-        
-        print(result)
+        print(self.buffer.print())
 
     def __isFull(self) -> bool:
-        return (self.last+1) % self.size == self.first
+        return self.buffer.length == self.buffer.size
 
     def __isEmpty(self) -> bool:
-        return self.first == -1
+        return self.buffer.length == 0
 
 
 # Helper class for BinaryTree & Binary Search Tree classes 
@@ -1310,3 +1267,15 @@ class HashMap:
 
     def insert(self, val: any, key: any) -> None:
         pass
+
+q = CircularQueue(5, int)
+q.enqueue(5)
+q.enqueue(6)
+q.enqueue(7)
+q.enqueue(8)
+q.enqueue(9)
+q.print()
+q.enqueue(10)
+q.print()
+print(q.dequeue())
+q.print()
