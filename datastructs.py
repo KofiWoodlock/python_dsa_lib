@@ -696,11 +696,11 @@ class TreeNode:
         self.left = None
         self.right = None
 
-class BinaryTree:
+class PointerBinaryTree:
     """
-    Binary tree - A structure in which data is arranged in a tree-like structure
+    Binary tree (pointer) - A structure in which data is arranged in a tree-like structure
                consiting of a root node, branch nodes and leaf nodes. Each node can have
-               a maximum of two child nodes. 
+               a maximum of two child nodes. Nodes are implemented using pointers.  
     """
     def __init__(self) -> None:
         self.root = None
@@ -890,6 +890,82 @@ class BinaryTree:
     def __isEmpty(self) -> bool:
         return not self.root
 
+class ArrayBinaryTree:
+    """
+     Binary tree (array) - A structure in which data is arranged in a tree-like structure
+               consiting of a root node, branch nodes and leaf nodes. Each node can have
+               a maximum of two child nodes. Nodes are implemented using array indexes.  
+    
+    """
+    def __init__(self) -> None:
+        self.tree = [0]
+        self.size = 0
+    
+    def insert(self, val: any) -> None: 
+        self.tree.append(val)
+        self.size += 1
+    
+    def remove(self) -> any:
+        val = self.tree.pop()
+        self.size -= 1
+        return val
+
+    def find(self, val: any) -> bool:
+        if self.__isEmpty():
+            return False
+        
+        curr = 1
+        while curr < self.size:
+            if self.tree[curr] == val:
+                return True
+            curr += 1
+
+    def getNode(self, index: int) -> any:
+        if self.__isEmpty():
+            return None        
+        if index < 0 or index > self.size:
+            raise IndexError("Index out of bounds")
+ 
+        return self.tree[index]
+
+    def getParent(self, index: int) -> any:
+        if self.__isEmpty():
+            return None        
+        if index < 0 or index > self.size:
+            raise IndexError("Index out of bounds")
+ 
+        return self.tree[index // 2]
+
+    def getLeft(self, index: int) -> any:
+        if self.__isEmpty():
+            return None        
+        if index < 0 or index > self.size:
+            raise IndexError("Index out of bounds")
+        
+        
+        if (2 * index) < self.size:
+            return self.tree[2 * index] 
+        else:
+            return None
+    
+    def getRight(self, index: int) -> any:
+        if self.__isEmpty():
+            return None
+        if index < 0 or index > self.size:
+            raise IndexError("Index out of bounds")
+
+        if (2 * index) < self.size:
+            return self.tree[2 * index + 1] 
+        else:
+            return None
+ 
+
+    def print(self) -> None:
+        print(self.tree[1:])
+
+    def __isEmpty(self) -> bool:
+        return self.size == 0
+
 class BST:
     """
     Binary search tree - A structure similar to a binary tree however the tree has an ordered property.
@@ -1009,3 +1085,20 @@ class MaxHeap:
 class Vector:
     pass
 
+tree = ArrayBinaryTree()
+tree.insert(8)
+tree.insert(4)
+tree.insert(2)
+tree.insert(1)
+tree.insert(4)
+tree.insert(7)
+tree.insert(5)
+tree.print()
+print(tree.find(10))
+print(tree.find(7))
+print(tree.remove())
+print(tree.remove())
+tree.print()
+print(tree.getLeft(3))
+print(tree.getLeft(2))
+print(tree.getRight(2))
