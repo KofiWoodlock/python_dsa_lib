@@ -1,25 +1,36 @@
-# Common & custom data structures, interface & implementation (C) KFW 2025 
-
-# Static array - A structure consisting of elements of the same type, identifiable by an index, 
-#              stored contiguosly in memory. It's size is not changeable 
+# Common & custom data structures interface & implementation (C) KFW 2025 
+ 
 class Array:
-    def __init__(self, size: int, type: type) -> None:
+    """
+    static array - A structure consisting of elements of the same type, identifiable by an index, 
+                stored contiguosly in memory. It's size is not changeable
+    """
+    def __init__(self, size: int, type: any) -> None:
         self.arr = [None] * size
         self.type = type
         self.size = size
         self.length = 0
 
-    # Appends an element to the end of the array
+    
     def append(self, val) -> None:
-        self.__checkType(val)
+        """
+        Appends an element to the end of the array
+        """
+
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
+        
         if self.__isFull():
             raise Exception("Cannot append to full array.")
         
         self.arr[self.length] = val
         self.length += 1
 
-    # Deletes the first occurence of a specified value in the array
     def delete(self, val) -> None:
+        """
+        Deletes the first occurence of a specified value in the array
+        """
+
         found = False
         for i in range(self.length):
             if found:
@@ -30,26 +41,35 @@ class Array:
         if found:
             self.length -= 1
         
-    # Inserts & overwrites an element at a given index within the array 
+        
     def insertAt(self, index: int, val) -> None:
-        self.__checkType(val)
-        if index < 0 or index >= self.length:
-            raise IndexError("Index out of bounds")
+        """
+        Inserts & overwrites an element at a given index within the array 
+        """
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
 
         self.arr[index] = val
 
-    # Removes an element at a given index from the array
+    
     def removeAt(self, index: int) -> None:
+        """
+        Removes an element at a given index from the array
+        """
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
+        
         if index < 0 or index > self.length:
             raise IndexError("Index out of range.")
     
+        self.arr[index] = None
         self.__shiftLeft(index)
         self.length -=1
                 
-    # Removes & returns the last element in the array
     def pop(self):
+        """
+        Removes an element at a given index from the array
+        """
         if self.__isEmpty():
             raise Exception("Cannot pop from empty array.")
         
@@ -58,11 +78,13 @@ class Array:
         self.length -= 1
         return val
     
-    # Reverses the array 
     def reverse(self) -> None:
+        """
+        Removes an element at a given index from the array
+        """
         if self.__isEmpty():
             raise Exception("Cannot reverse empty array.")
-        self.arr[:self.length] = self.arr[:self.length][::-1]
+        self.arr[:self.length] = self.arr[self.length-1::-1]
 
     def sort(self):
         pass
@@ -70,9 +92,11 @@ class Array:
     def get(self, index: int):
         return self.arr[index]
 
-    # Finds an element in the array and returns its index
     def find(self, val) -> int:
-        for i in range(self.length):
+        """
+        Finds an element in the array and returns its inded
+        """
+        for i in range(self.arr):
             if self.arr[i] == val:
                 return i
         return -1 
@@ -89,22 +113,22 @@ class Array:
     def __shiftLeft(self, i: int):
         for index in range(i+1, self.size):
             self.arr[index-1] = self.arr[index]
-        
-    def __checkType(self, val) -> None:
-        if type(val) != self.type:
-            raise TypeError(f"Values must be of type {self.type}")
 
-# Dynamic array - A structure consisting of elements of the same type, identifiable by an index, 
-#              stored contiguosly in memory. It's size is changeable during runtime
 class DynamicArray:
-    def __init__(self, type: type) -> None:
+    """
+    dynamic array - A structure consisting of elements of the same type, identifiable by an index, stored contiguosly in memory. It's size is changeable during runtime
+    """
+
+    def __init__(self, type: any) -> None:
         self.type = type
         self.size = 2
         self.length = 0
         self.arr = [None] * self.size
 
-    # Appends an element to the end of the array
     def append(self, val) -> None:
+        """
+        Appends an element to the end of the array
+        """
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
         
@@ -114,8 +138,11 @@ class DynamicArray:
         self.arr[self.length] = val
         self.length += 1
 
-    # Removes & returns the last element in the array
+    
     def pop(self) -> any:
+        """
+        Removes & returns the last element in the array
+        """
         if self.__isEmpty():
             raise Exception("Cannot pop from empty array.")
         
@@ -124,106 +151,53 @@ class DynamicArray:
         self.length -= 1
         return value 
     
-    # Inserts & overwrites an element at a given index within the array
-    def insertAt(self, val: type, index: int) -> None:
-        self.__checkType(val)
+    def insertAt(self, val: any, index: int) -> None:
+        """
+        Inserts & overwrites an element at a given index within the array
+        """
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
+        
         if self.__isEmpty() and index > 0:
             raise Exception("Index specified does not exist as array is empty.")
+        
         if index < 0 or index > self.length-1:
             raise IndexError("Index out of bounds.")
 
         self.arr[index] = val
 
-    # Removes an element at a given index from the array
-    def removeAt(self, val: type, index: int) -> None:
-        self.__checkType(val)
+    
+    def removeAt(self, val: any, index: int) -> None:
+        """
+        Removes an element at a given index from the array
+        """
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
+        
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
-        if index < 0 or index > self.length-1:
-            raise IndexError("Index out of bounds.")
 
         self.arr[index] = None
         self.length -= 1
 
-    # Reverses the list
+    
     def reverse(self) -> None:
+        """
+        Reverses the array
+        """
         if self.__isEmpty():
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[self.length-1::-1]
-    
-    # Sorts the list in ascending order by default if descending parameter not supplied 
-    def sort(self, descending: bool=False) -> None:     
-        self.__sort(self.arr, 0, self.length)
-        
-        if descending:
-            self.arr.reverse()
 
-    def __sort(self, arr, l, r) -> list:
-        if l < r:
-            m = (l+r) // 2
-            self.__sort(arr, l, m)
-            self.__sort(arr, m+1, r)
-            self.__merge(arr, l, m, r)
-    
-    def __merge(self, arr, left, mid, right) -> list:
-        lsubarr = arr[left: mid+1]
-        rsubarr = arr[mid+1: right+1]
 
-        i = 0
-        j = 0
-        k = left
-        while i<len(lsubarr) and j < len(rsubarr):
-            if lsubarr[i] <= rsubarr[j]:
-                arr[k] = lsubarr[i]
-                i += 1
-            else:
-                arr[k] = rsubarr[j]
-                j += 1
-            k += 1
-        
-        while i < len(lsubarr):
-            arr[k] = lsubarr[i]
-            i += 1
-            k += 1
-        while j < len(rsubarr):
-            arr[k]= rsubarr[j]
-            j += 1
-            k += 1
-
-    # Returns an element at a given index 
     def get(self, index: int) -> any:
+        """
+        Returns an element at a given index 
+        """
         if self.__isEmpty():
             raise IndexError("Cannot use get on empty array.")
         
         return self.arr[index]
-    
-    # reutrns index of first occurence of an element 
-    def index(self, val: any) -> int:
-        for i in range(self.length):
-            if self.arr[i] == val:
-                return i
-        raise ValueError(f"{val} does not exist in the array.")
-
-    # Clears contents of array
-    def clear(self) -> None:
-        if self.__isEmpty():
-            raise Exception("Cannot clear empty array.")
-        
-        for i in range(self.length):
-            self.arr[i] = None
-        self.length = 0
-
-    # Returns the number of occurences of a value
-    def count(self, val: any) -> int:
-        occurences = 0
-        for i in range(self.length):
-            if self.arr[i] == val:
-                occurences += 1
-        return occurences
-    
-    def concatenate(self, array: list) -> None:
-        for e in array:
-            self.append(e)
     
     def print(self) -> None:
         print(self.arr[:self.length])
@@ -239,13 +213,11 @@ class DynamicArray:
             new_arr[i] = self.arr[i]
         self.arr = new_arr
 
-    def __checkType(self, val) -> None:
-        if type(val) != self.type:
-            raise TypeError(f"Values must be of type {self.type}")
-
-# Stack - A structure consiting of elements that can be of different types. 
-#         Operates in the last-in-first-out (LIFO) principle.            
+           
 class Stack:
+    """
+    stack - A structure consiting of elements that can be of different types. Operates in the last-in-first-out (LIFO) principle. 
+    """
     def __init__(self):
         self.stack = [] 
 
@@ -261,8 +233,6 @@ class Stack:
     def print(self) -> None:
         print(self.stack)
 
-# Linked list - A structure similar to an array but the elements are not stored contiguosly in memory, in fact 
-#               They are linked together via pointers to ones memory address 
 class ListNode:
     def __init__(self, val: any) -> None:
             self.val = val
@@ -270,12 +240,18 @@ class ListNode:
             self.prev = None
     
 class SinglyLL:
+    """
+    linked list - a structure similar to an array but the elements are not stored contiguosly in memory, in fact they are linked together via pointers to ones memory address 
+
+    """
     def __init__(self) -> None:
         self.head = None
         self.tail = None
 
-    # Inserts an element at the front (head) of the linked list 
     def insertHead(self, val: any) -> None:
+        """
+        Inserts an element at the front (head) of the linked list 
+        """
         new_node = ListNode(val)
 
         if self.__isEmpty():
@@ -286,8 +262,10 @@ class SinglyLL:
         new_node.next = self.head
         self.head = new_node
 
-    # Inserts an element at the end (tail) of the linked list 
     def insertTail(self, val: any) -> None:
+        """
+        Inserts an element at the end (tail) of the linked list 
+        """
         new_node = ListNode(val)
 
         if self.__isEmpty():
@@ -298,23 +276,32 @@ class SinglyLL:
         self.tail.next = new_node
         self.tail = self.tail.next
 
-    # Removes first (head) element from the linked list
+    
     def removeHead(self) -> None:
+        """
+        Removes first (head) element from the linked list
+        """
         if self.__isEmpty():
             raise Exception("Cannot remove from empty linked list")
         
         self.head = self.head.next
 
-    # Removes element at a specified index 
+    
     def removeAt(self, index: int) -> None:
+        """
+        Removes element at a specified index 
+        """
         i = 0 
         curr = self.head
         while i < index and curr:
             i += 1
             curr = curr.next
 
-    # Reverses contents linked list 
+
     def reverse(self) -> None:
+        """
+        Reverses contents linked list 
+        """
         if self.__isEmpty():
             raise Exception("Cannot reverse empty linked list.")
         
@@ -328,8 +315,10 @@ class SinglyLL:
         self.head = prev
 
 
-    # Checks to see if some element is in the linked list & returns position
     def find(self, target: any) -> int:
+        """
+        Checks to see if some element is in the linked list & returns position
+        """
         index = 0
         curr = self.head
         while curr:
@@ -350,16 +339,21 @@ class SinglyLL:
     def __isEmpty(self) -> bool:
         return not self.head
 
-# Doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous
-#                      and next node via pointers 
+
 class DoublyLL:
+    """
+    doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous and next node via pointers 
+    """
     def __init__(self) -> None:
         self.head = None
         self.tail = None
         self.length = 0
     
-    # Inserts an element at the head (front) of the linked list 
+
     def insertHead(self, val: any) -> None:
+        """
+        Inserts an element at the head (front) of the linked list 
+        """
         new_node = ListNode(val)
         if self.__isEmpty():
             self.head = new_node
@@ -370,8 +364,11 @@ class DoublyLL:
             self.head = new_node
         self.length +=1 
 
-    # Inserts an element at the tail (end) of the linked list
+
     def insertTail(self, val: any) -> None:
+        """
+        Inserts an element at the tail (end) of the linked list
+        """
         new_node = ListNode(val)
         if self.__isEmpty():
             self.head = new_node
@@ -382,8 +379,11 @@ class DoublyLL:
             self.tail = new_node
         self.length += 1
 
-    # Inserts an element at a given index 
+
     def insertAt(self, val: any, index: int) -> None:
+        """
+        Inserts an element at a given index 
+        """
         if index < 0 or index > self.length:
             raise IndexError("Index out of bounds")
         
@@ -408,24 +408,36 @@ class DoublyLL:
         curr.next = new_node
         self.length += 1
         
-    # Removes the element at the head (front) of the linked list
+
     def removeHead(self) -> None:
+        """
+        Removes the element at the head (front) of the linked list
+        """
         if self.__isEmpty():
             raise Exception("Cannot remove from empty list")
         
         self.head.next.prev.val = None
         self.head = self.head.next
 
-    # Removes the element at the tail (end) of the linked list
+
     def removeTail(self) -> None:
+        """
+        Removes the element at the tail (end) of the linked list
+        """
         pass
 
-    # Removes the element at a given index 
+
     def removeAt(self) -> None:
+        """
+        Removes the element at a given index 
+        """
         pass
 
-    # Removes all elements from the linked list
+
     def clear(self) -> None:
+        """
+        Removes all elements from the linked list
+        """
         curr = self.head
         while curr:
             next_node = curr.next
@@ -437,8 +449,11 @@ class DoublyLL:
         self.tail = None
         self.length = 0
     
-    # Checks to see if some element is in the linked list & returns position
+     
     def find(self, target: any) -> int:
+        """
+        Checks to see if some element is in the linked list & returns position
+        """
         index = 0
         curr = self.head
         while curr:
@@ -459,15 +474,19 @@ class DoublyLL:
     def __isEmpty(self) -> bool:
         return not self.head
 
-# Queue - A structure consiting of elements that can be of different types. 
-#         Operates in the first-in-first-out (FIFO) principle meaning the first element added will be the first element removed
+
 class Queue:
+    """
+    Queue - A structure consiting of elements that can be of different types. Operates in the first-in-first-out (FIFO) principle meaning the first element added will be the first element removed
+    """
     def __init__(self) -> None:
         self.first = self.last = None
         self.length = 0
 
-    # Adds an item to the front of the queue 
     def enqueue(self, val: any) -> None:
+        """
+         Adds an item to the front of the queue 
+        """
         new_node = ListNode(val)
         
         if self.__isEmpty():
@@ -477,8 +496,10 @@ class Queue:
             self.last = self.last.next
         self.length += 1
 
-    # Removes the first item from the queue 
     def dequeue(self) -> any:
+        """
+        Removes the first item from the queue 
+        """
         if self.__isEmpty():
             raise Exception("Cannot dequeue from empty queue")
         
@@ -493,16 +514,22 @@ class Queue:
         self.length -= 1
         return val
     
-    # Returns the first item in the queue
     def getfront(self) -> any:
+        """
+        Returns the first item in the queue
+        """
         return self.first.val
 
-    # Returns the last item in the queue 
     def getRear(self) -> any:
+        """
+        Returns the last item in the queue  
+        """
         return self.last.val
 
-    # Prints the entire queue 
     def print(self) -> None:
+        """
+        Prints the entire queue 
+        """
         curr = self.first
         while curr != None:
             print(f"{curr.val}->",end="")
@@ -512,10 +539,12 @@ class Queue:
     def __isEmpty(self) -> int:
         return self.length == 0
 
-# Deque - Short for double ended queue it is a structure consiting of elements that cane be of different types.
-#         It is similar to a queue in the fact it operates in the first-in-first-out (FIFO) principle but differs to a queue
-#         as both ends can act as the first element in the queue i.e elements can be added and removed from the front and back    
 class Deque:
+    """
+    Deque - Short for double ended queue it is a structure consiting of elements that cane be of different types.
+         It is similar to a queue in the fact it operates in the first-in-first-out (FIFO) principle but differs to a queue
+         as both ends can act as the first element in the queue i.e elements can be added and removed from the front and back    
+    """
     def __init__(self) -> None:
         self.front = None
         self.back = None
@@ -544,13 +573,7 @@ class Deque:
         self.length +=1
 
     def pop(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Cannot pop from empty Deque")
-
-        val = self.back.val
-        self.back.prev.next = None
-        self.back = self.back.prev
-        return val
+        pass
 
     def popLeft(self) -> any:
         if self.__isEmpty():
@@ -570,170 +593,127 @@ class Deque:
     def __isEmpty(self) -> bool:
         return not self.front
 
-# Circular queue - similar to a regular queue except the last element in the queue is connected to
-#                  the first element, forming a circle. A circualr queue still operates in the first-in-first-out (FIFO)
-#                  principle. The queue is of fixed size
 class CircularQueue:
-    def __init__(self, size: int, type: any ):
-        self.size = size
-        self.queue = [None] * self.size
-        self.front = -1
-        self.rear = -1
+    """
+    Circular queue - similar to a regular queue except the last element in the queue is connected to
+                  the first element, forming a circle. A circualr queue still operates in the first-in-first-out (FIFO)
+                  principle
+    """
+    def __init__(self, size: int, ):
+        self.queue = Array()
 
-    # Adds an item to the front of the queue 
     def enqueue(self, val: any) -> None:
-        if self.__isEmpty():
-            self.front = 0
-            self.rear = 0
-        else:
-            self.rear = (self.rear+1) % self.size
-        
-        self.queue[self.rear] = val
+        """
+        Adds an item to the front of the queue 
+        """
+        pass
 
-    # Removes the first item from the queue 
     def dequeue(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Cannot dequeue from empty queue.")
-        
-        val = self.queue[self.front]
-        self.queue[self.front] = None
-        
-        if self.front == self.rear:
-            self.front = -1
-            self.rear = -1
-        else:
-            self.front = (self.front+1) % self.size
-        
-        return val
+        """
+        Removes the first item from the queue        
+        """
+        pass
     
-    # Returns the first item in the queue
     def getfront(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Queue is empty")
-        return self.queue[self.front]
+        """
+        Returns the first item in the queue       
+        """
+        pass
 
-    # Returns the last item in the queue 
     def getRear(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Queue is empty")
-        return self.queue[self.rear]
+        """
+        Returns the last item in the queue        
+        """
+        pass
 
-    def print(self):
-        if self.__isEmpty():
-            print("Queue is empty")
-            return 
 
-        res = []
-        i = self.front
-        while True:
-            res.append(self.queue[i])
-            if i == self.rear:
-                break
-            i = (i+1) % self.size
-        print(res)
+class PriorityQueue:
+    """
+    Priority queue - A subset of the queue data structure that arranges elements based on their priority value.
+                  Elements with a higher priority are retrieved and removed first                   
+    """
+    pass
 
-    def __isEmpty(self) -> bool:
-        return self.front == -1
-    
-    def __isFull(self) -> bool:
-        return (self.rear + 1) % self.size == self.front
-
-# Circular buffer - A structure consisting of elements of the same type, identifiable by an index,
-#                   stored contigously in memory. It's size is not changeable & once the buffer is full
-#                   the oldest data is overwrited starting from the beginning.
 class CircularBuffer:
+    """
+    Circular buffer - A structure consisting of elements of the same type, identifiable by an index,
+                   stored contigously in memory. It's size is not changeable & once the buffer is full
+                   the oldest data is overwrited starting from the beginning.
+    """
     def __init__(self, size: int, type: any) -> None:
+        self.buffer = Array(size, type)
         self.type = type
         self.size = size
-        self.first = -1
-        self.last = -1
-        self.buffer = [None] * self.size
+        self.first = 0
 
-    # Inserts an element into the buffer 
     def insert(self, val) -> None:
-        if not isinstance(val, self.type):
+        if type(val) != self.type:
             raise TypeError("Value data type does not match specified data type.")
 
         if self.__isFull():
-            self.first = (self.first + 1) % self.size
+            raise MemoryError("Buffer is full.")
 
+        last = (self.first + self.buffer.length) % self.buffer.size
+        self.buffer.insertAt(last, val)
+        self.buffer.length += 1
+
+    def remove(self):
         if self.__isEmpty():
-            self.first = 0
-
-        self.last = (self.last + 1) % self.size
-        self.buffer[self.last] = val     
-
-    # Removes the first element added to the buffer
-    def remove(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Buffer is empty.")
+            return None
         
-        val = self.buffer[self.first]
-        self.buffer[self.first] = None
-
-        if self.first == self.last:
-            self.first = -1
-            self.last = -1
-        else:
-            self.first = (self.first + 1) % self.size
-        
+        val = self.buffer.get(self.first)
+        self.first = (self.first + 1) % self.buffer.size
+        self.buffer.length -= 1
         return val
 
-    # Returns the first element in the buffer
     def getFirst(self) -> any:
         if self.__isEmpty():
             return None
-        return self.buffer[self.first]
+        return self.buffer.get(self.first)
 
-    # Returns the last element in the buffer
     def getLast(self) -> any:
         if self.__isEmpty():
             return None
-        return self.buffer[self.last]
+        last = (self.first + self.buffer.length-1) % self.buffer.size
+        return self.buffer.get(last)
 
     def print(self):
-        if self.__isEmpty():
-            print("Buffer is empty")
-            return 
-        
-        result = []
-        i = self.first
-        while True:
-            result.append(self.buffer[i])
-            if i == self.last:
-                break
-            i = (i + 1) % self.size
-        
-        print(result)
+        print(self.buffer.print())
 
     def __isFull(self) -> bool:
-        return (self.last+1) % self.size == self.first
+        return self.buffer.length == self.buffer.size
 
     def __isEmpty(self) -> bool:
-        return self.first == -1
+        return self.buffer.length == 0
 
 
-# Helper class for BinaryTree & Binary Search Tree classes 
 class TreeNode:
+    """
+    Helper class for BinaryTree & Binary Search Tree classes  
+    """
     def __init__(self, val: any) -> None:
         self.val = val
         self.left = None
         self.right = None
 
-# Binary tree - A structure in which data is arranged in a tree-like structure
-#               consiting of a root node, branch nodes and leaf nodes. Each node can have
-#               a maximum of two child nodes. 
 class BinaryTree:
+    """
+    Binary tree - A structure in which data is arranged in a tree-like structure
+               consiting of a root node, branch nodes and leaf nodes. Each node can have
+               a maximum of two child nodes. 
+    """
     def __init__(self) -> None:
         self.root = None
-        self.height = self.__getHeight(self.root)
         self.__preOutput = []
         self.__inOutput = []
         self.__postOutput = []
         self.__levelOutput = []
 
-    # Adds a new node to the tree in the next non-complete layer from left to right  
+
     def insert(self, val: any) -> None:
+        """
+        Adds a new node to the tree in the next non-complete layer from left to right     
+        """
         if self.__isEmpty():
             self.root = TreeNode(val)   
             return 
@@ -755,16 +735,18 @@ class BinaryTree:
                 curr.right = TreeNode(val)
                 return 
 
-    # Removes a specified element from the tree and replaces it with bottom right-most node  
-    def remove(self, val: any) -> None:
+    def remove(self, root, val: any) -> None:
+        """
+        Removes a specified element from the tree and replaces it with bottom right-most node   
+        """
         if self.__isEmpty():
             raise Exception("Cannot remove from empty tree")
-        
-        self.root = self.__remove(self.root, val)
-    
-    def __remove(self, root: TreeNode, val: any) -> TreeNode:
+
         if not root.left and not root.right:
-            return None if root.val == val else root
+            if root.val == val:
+                return None
+            else:
+                return root
 
         q = [root]
         curr = None
@@ -786,42 +768,13 @@ class BinaryTree:
 
         return root 
     
-    # Returns & Removes the deepest rightmost node in the binary tree 
     def pop(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Cannot pop from empty tree")
+        pass
         
-        if not self.root.left and not self.root.right:
-            val = self.root.val
-            self.root = None
-            return val
-        
-        q = [self.root]
-        parent = None
-        curr = None
-        while q:
-            curr = q.pop(0)
-            if curr.left:
-                parent = curr
-                q.append(curr.left)
-            if curr.right:
-                parent = curr
-                q.append(curr.right)
-        val = curr.val
-        if parent:
-            if parent.right == curr:
-                parent.right = None
-            else:
-                parent.left = None
-                
-        return val
-
-
-    # Returns a list of nodes in pre-order (root, left, right)
-    def preOrder(self) -> list:
-        return self.__preOrder(self.root)
-
-    def __preOrder(self, root: TreeNode) -> list:
+    def preOrder(self, root) -> list:
+        """
+        Returns a list of nodes in pre-order (root, left, right)  
+        """
         if not root:
             return
 
@@ -831,11 +784,10 @@ class BinaryTree:
         return self.__preOutput
         
 
-    # Returns a list of nodes in-order (left, root, right)
-    def inOrder(self) -> list:
-        return self.__inOrder(self.root)
-
-    def __inOrder(self, root: TreeNode) -> list:
+    def inOrder(self, root) -> list:
+        """
+        Returns a list of nodes in-order (left, root, right) 
+        """
         if not root:
             return
 
@@ -844,11 +796,10 @@ class BinaryTree:
         self.inOrder(root.right)
         return self.__inOutput
 
-    # Returns a list of nodes in post-order (left, right, root)
-    def postOrder(self) -> list:
-        return self.__postOrder(self.root)
-
-    def __postOrder(self, root: TreeNode) -> list:
+    def postOrder(self, root) -> list:
+        """
+        Returns a list of nodes in post-order (left, right, root) 
+        """
         if not root:
             return 
 
@@ -860,6 +811,16 @@ class BinaryTree:
     def levelOrder(self, root) -> list:
         pass
 
+    def maxHeight(self) -> int:
+        pass
+
+    def maxDepth(self) -> int:
+        pass
+
+    def enumerate(self) -> None:
+        pass
+
+    
     def print(self) -> None:
         if self.__isEmpty():
             print("Tree is empty")
@@ -891,14 +852,18 @@ class BinaryTree:
             
             level_nodes = new_level_nodes
 
-    # Helper function to calculate height of binary tree
     def __getHeight(self, node) -> int:
+        """
+        Helper function to calculate height of binary tree
+        """
         if not node:
             return 0
         return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))
     
-    # Helper function to delete deepest node in binary tree
     def __remDeepest(self, root, target) -> None:
+        """
+        Helper function to delete deepest node in binary tree 
+        """
         q = [root]
         while q:
             curr = q.pop(0)
@@ -925,17 +890,19 @@ class BinaryTree:
     def __isEmpty(self) -> bool:
         return not self.root
 
-# Binary search tree - A structure similar to a binary tree however the tree has an ordered property.
-#                      Meaning nodes smaller than the root will be inserted into the left subtree 
-#                      whereas nodes larger than the root will be inserted into the right subtree.
 class BST:
+    """
+    Binary search tree - A structure similar to a binary tree however the tree has an ordered property.
+                      Meaning nodes smaller than the root will be inserted into the left subtree 
+                      whereas nodes larger than the root will be inserted into the right subtree.
+    """
     def __init__(self):
         self.root = None
 
     def insert(self, val: any) -> None:
         newNode = TreeNode(val)
 
-        if self.__isEmpty(): 
+        if self.__isEmpty():
             self.root = newNode
         
         parent = None
@@ -955,118 +922,22 @@ class BST:
         return
     
     def remove(self, val: any) -> None:
-        if self.__isEmpty():
-            raise Exception("Cannot remove from empty tree")
-        self.root = self.__remove(self.root, val)
-    
-    def __remove(self, root: TreeNode, val: any) -> TreeNode:
-        if not root:
-            raise Exception("Element not found in tree")
-
-        if val < root.val:
-            root.left = self.__remove(root.left, val)
-            return root
-        elif val > root.val:
-            root.right = self.__remove(root.right, val)
-            return root
-        
-        if not root.left:
-            return root.right
-        elif not root.right:
-            return root.left
-
-        parent = root
-        successor = root.right
-        while successor.left:
-            parent = successor
-            successor = successor.left
-
-        root.val = successor.val
-        if parent.left == successor:
-            parent.left = successor.right
-        else:
-            parent.right = successor.right
-        
-        return root
+        pass
 
     def search(self, val: any) -> bool:
-        if self.__isEmpty():
-            raise Exception("Cannot search empty tree")
-        return self.__search(self.root, val)
+        pass
 
-    def __search(self, root: TreeNode, val: any) -> bool:
-        if not root:
-            return False
-
-        if val < root.val:
-            return self.__search(root.left, val)
-        elif val > root.val:
-            return self.__search(root.right, val)
-        else:
-            return True 
-        
     def minVal(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Tree is empty")  
-        return self.__getMinVal(self.root)
-        
-    def __getMinVal(self, root: TreeNode) -> any:
-        if not root:
-            return None
+        pass
 
-        curr = root
-        while curr.left:
-            curr = curr.left
-        return curr.val
+    def minVal(self) -> any:
+        pass
 
-    def maxVal(self) -> any:
-        if self.__isEmpty():
-            raise Exception("Tree is empty")
-        return self.__getMaxVal(self.root)
-    
-    def __getMaxVal(self, root: TreeNode) -> any:
-        if not root:
-            return None
-        
-        curr = root
-        while curr.right:
-            curr = curr.right
-        return curr.val
+    def floor(self) -> None:
+        pass
 
-    def floor(self, val: int) -> int:
-        if self.__isEmpty():
-            raise Exception("Tree is empty")
-        return self.__floor(self.root, val)
-    
-    def __floor(self, root: TreeNode, val: int) -> int:
-        if not root:
-            return -1
-        
-        if root.val == val:
-            return root.val
-        if root.val > val:
-            return self.__floor(root.left, val)
-
-        floor = self.__floor(root.right, val)
-        
-        return floor if floor <= val and floor != -1 else root.val
-
-    def ceil(self, val: int) -> int:
-        if self.__isEmpty():
-            raise Exception("Tree is empty")
-        return self.__ceil(self.root, val)
-    
-    def __ceil(self, root: TreeNode, val: int) -> int:
-        if not root:
-            return -1
-        
-        if root.val == val:
-            return root.val
-        if root.val < val:
-            return self.__ceil(root.right, val)
-        ceil = self.__floor(root.left, val)
-        return ceil if ceil >= val else root.val
-        
+    def ceil(self) -> None:
+        pass
 
     def print(self) -> None:
         if self.__isEmpty():
@@ -1099,214 +970,42 @@ class BST:
             
             level_nodes = new_level_nodes
 
-    # Helper function to calculate height of binary search tree
     def __getHeight(self, node) -> int:
+        """
+        Helper function to calculate height of binary search tree 
+        """
         if not node:
             return 0
         return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))        
 
-    def __isEmpty(self) -> bool:
+    def __isEmpty(self):
         return not self.root
 
-# MinHeap - A structure in which the root node is the smallest value among its descendant nodes 
-#           And the same property must follow for it's left and right subtrees also.
 class MinHeap:
+    """
+    MinHeap - A structure in which the root node is the smallest value among its descendant nodes 
+           And the same property must follow for it's left and right subtrees also.
+    """
     def __init__(self):
-        self.heap = [0]
+        self.heap = []
 
-    def push(self, val: any) -> None:
+    def insert(self, val: any) -> None:
         self.heap.append(val)
-        index = len(self.heap) - 1 
-        while index > 1 and self.heap[index // 2] > self.heap[index]:
-            self.heap[index], self.heap[index // 2] = self.heap[index // 2], self.heap[index] 
-            index = index // 2
+        index = len(self.heap) -1 
+        while index > 0 and self.heap[index-1 // 2] > self.heap[index]:
+            self.heap[index], self.heap[index-1 // 2] = self.heap[index-1 // 2], self.heap[index] 
+            index = (index - 1) // 2
 
-    def pop(self) -> any:
-        if len(self.heap) == 1:
-            return None
-        if len(self.heap) == 2:
-            return self.heap.pop()
-        
-        val = self.heap[1]
-        self.heap[1] = self.heap.pop()
-        index = 1
+    def delete(self) -> None:
+        pass
 
-        while index * 2 < len(self.heap):
-            if 2 * index + 1 < len(self.heap) and \
-            self.heap[2*index+1] < self.heap[2*index] and \
-            self.heap[index] > self.heap[2*index+1]:
-                self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
-                index = 2 * index + 1
-            elif self.heap[index] > self.heap[2*index]:
-                self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
-                index = 2 * index
-            else:
-                break
-        return val 
+    def heapify(self) -> None:
+        pass
 
-    def heapify(self, arr: list) -> None:
-        arr.append(arr[0])
-
-        self.heap = arr
-        curr = (len(self.heap)-1) // 2
-        while curr > 0:
-            index = curr
-            while 2*index < len(self.heap):
-                if (2*index+1 < len(self.heap)) and \
-                self.heap[2*index+1] < self.heap[2*index] and \
-                self.heap[index] > self.heap[2*index+1]:
-                    self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
-                    index = 2*index+1
-                elif self.heap[index] > self.heap[2*index]:
-                    self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
-                    index = 2*index
-                else:
-                    break
-            curr -= 1
-
-    def getMin(self) -> any:
-        if len(self.heap) >= 1:
-            return self.heap[1]
-        else:
-            raise Exception("Heap is empty")
-
-    def print(self) -> None:
-        print(self.heap[1:])
-
-# MaxHeap - A structure in which the root node is the largest value among its descendant nodes
-#           And the same property must follow for it's left and right subtrees also.
 class MaxHeap:
-    def __init__(self) -> None:
-        self.heap = [0]
-
-    def push(self, val: any) -> None:
-        self.heap.append(val)
-        index = len(self.heap) - 1
-        while index > 1 and self.heap[index // 2] < self.heap[index]:
-            self.heap[index], self.heap[index // 2] = self.heap[index // 2], self.heap[index]
-            index = index // 2
-
-    def pop(self) -> any:
-        if len(self.heap) == 1:
-            return None
-        if len(self.heap) == 2:
-            return self.heap.pop()
-        
-        val = self.heap[1]
-        self.heap[1] = self.heap.pop()
-        index = 1
-
-        while 2*index < len(self.heap):
-            if 2*index + 1 < len(self.heap) and \
-            self.heap[2*index+1] > self.heap[2*index] and \
-            self.heap[index] < self.heap[2*index+1]:
-                self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
-                index = 2*index+1
-            elif self.heap[index] < self.heap[2*index]:
-                self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
-                index = 2*index
-            else:
-                break
-        return val
-
-    def heapify(self, arr: list) -> None:
-        arr.append(arr[0])
-        
-        self.heap = arr
-        curr = (len(self.heap)-1) // 2
-        while curr > 0:
-            index = curr
-            while 2*index < len(self.heap):
-                if 2*index+1 < len(self.heap) and \
-                self.heap[2*index+1] > self.heap[2*index] and \
-                self.heap[index] < self.heap[2*index+1]:
-                    self.heap[index], self.heap[2*index+1] = self.heap[2*index+1], self.heap[index]
-                    index = 2*index+1
-                elif self.heap[index] < self.heap[2*index]:
-                    self.heap[index], self.heap[2*index] = self.heap[2*index], self.heap[index]
-                    index = 2*index
-                else:
-                    break
-            curr -=1 
-
-    def getMax(self) -> any:
-        if len(self.heap) >= 1:
-            return self.heap[1]
-        else:
-            raise Exception("Heap is empty")
-
-    def print(self) -> None:
-        print(self.heap[1:])
-
-# Helper class for Adjacency List class
-class GraphNode:
-    def __init__(self, val: any):
-        self.val = val
-        self.neighbours = []
-
-# Adjacency list - A strucutre that represents graphs 
-#                  using a lists that store a nodes neighbours
-class AdjacencyList:
     pass
 
-# Matrix - A structure in which elements are arranged in rows and columns
-class Matrix:
-    def __init__(self, rows: int, columns: int) -> None:
-        self.rows = rows
-        self.columns = columns
-        self.matrix = [[0 for c in range(self.columns)] for r in range(self.rows)]
 
-    # Inserts a specified value into a given row and column of the matrix
-    def insert(self, val: any, row: int, column: int) -> None:
-        if row < 0 or row >= self.rows or column < 0 or column >= self.columns:
-            raise IndexError("row or column is out of bounds")
-        self.matrix[row][column] = val
-    
-    # Removes the first occurence of a specified value 
-    def remove(self, val: any) -> None:
-        if len(self.matrix) == 0:
-            raise Exception("Cannot remove from empty matrix")
-
-        for i, row in enumerate(self.matrix):
-            for j, cell in enumerate(row):
-                if cell == val:
-                    self.matrix[i][j] = 0
-                    return 
-        raise Exception(f"{val} does not exist in matrix")
-
-    def print(self) -> None:
-        for row in self.matrix:
-            print(" | ".join(map(str, row)))
-
-# Vector - A one dimensional array typically storing numbers that represent direction and magnitude
 class Vector:
-    def __init__(self, x=0, y=0, z=0) -> None:
-        self.vector = [x, y, z]
+    pass
 
-    def add(self, v: 'Vector') -> None:
-        for i in range(len(self.vector)):
-            self.vector[i] += v.vector[i]
-
-    def subtract(self, v: 'Vector') -> None:
-        for i in range(len(self.vector)):
-            self.vector[i] -= v.vector[i]
-    
-    def multiply(self, v: 'Vector') -> None:
-        pass
-
-    def print(self) -> None:
-        print(self.vector)
-
-# Hashmap - A structure that maps key : value pairs by computing an index using a hash function
-#           The key is unique and immutable and duplicates are not supported 
-class HashMap:
-    def __init__(self, capacity: int) -> None:
-        self.capacity = capacity
-        self.size = 0
-        self.hashmap = [None] * capacity
-
-    def __hash(self, val: any) -> int:
-        pass
-
-    def insert(self, val: any, key: any) -> None:
-        pass
