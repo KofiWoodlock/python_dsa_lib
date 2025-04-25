@@ -1052,7 +1052,7 @@ class BST:
         """
         if not node:
             return 0
-        return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right))        
+        return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right)) 
 
     def __isEmpty(self):
         return not self.root
@@ -1066,6 +1066,7 @@ class MinHeap:
         self.heap = []
 
     def insert(self, val: any) -> None:
+        """ Inserts a value to the heap and orders depending on its value. Lowest becoming the root. """
         self.heap.append(val)
         index = len(self.heap) -1 
         while index > 0 and self.heap[index-1 // 2] > self.heap[index]:
@@ -1073,9 +1074,35 @@ class MinHeap:
             index = (index - 1) // 2
 
     def delete(self) -> None:
-        pass
+        """ Removes the node with the smallest value from the heap """
 
-    def heapify(self) -> None:
+        # Stores value with minimum value i.e the 1st index in umderlying array 
+        res = self.heap[1]
+        # Update first element with last element 
+        self.heap[1] = self.heap.pop()
+        
+        # Ensure min property of heap 
+        # if root node is now larger than any of its descendatns move that node to the correct position 
+
+        # helper function to percolate nodes to correct position
+        self._percolateDown()
+    
+    def _percolateDowm(self) -> None:
+        index = 1
+        # While current node is not a leaf node 
+        while 2*index < len(self.heap):
+            if (2*index + 1 < len(self.heap)) and self.heap[index] > self.heap[2*index+1]:
+                self.heap[index], self.heap[2*index+1] =  self.heap[2*index+1], self.heap[index]
+                index = 2*index+1
+            elif self.heap[index] > self.heap[2*index]:
+                self.heap[index], self.heap[2*index] =  self.heap[2*index], self.heap[index]
+                index = 2*index+1
+            else:
+                break
+        
+
+
+    def heapify(self, Iterable: list ) -> None:
         pass
 
 class MaxHeap:
@@ -1085,20 +1112,8 @@ class MaxHeap:
 class Vector:
     pass
 
-tree = ArrayBinaryTree()
-tree.insert(8)
-tree.insert(4)
-tree.insert(2)
-tree.insert(1)
-tree.insert(4)
-tree.insert(7)
-tree.insert(5)
-tree.print()
-print(tree.find(10))
-print(tree.find(7))
-print(tree.remove())
-print(tree.remove())
-tree.print()
-print(tree.getLeft(3))
-print(tree.getLeft(2))
-print(tree.getRight(2))
+
+class HashTable:
+    pass
+
+
