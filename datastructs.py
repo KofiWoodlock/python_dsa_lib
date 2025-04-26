@@ -1085,9 +1085,9 @@ class MinHeap:
         # if root node is now larger than any of its descendatns move that node to the correct position 
 
         # helper function to percolate nodes to correct position
-        self._percolateDown()
+        self.__percolateDown()
     
-    def _percolateDowm(self) -> None:
+    def __percolateDowm(self) -> None:
         index = 1
         # While current node is not a leaf node 
         while 2*index < len(self.heap):
@@ -1114,6 +1114,49 @@ class Vector:
 
 
 class HashTable:
-    pass
+    """
+    Hash Table - A structure that creates a mapping between keys and values using hashing  
+                 this implementation uses chaining to deal with collisions
+    """
 
+    def __init__(self, capacity: int) -> None:
+        self.capacity = capacity
+        self.table = [[] for _ in range(capacity)]
 
+    def _hash(self, key: any) -> int:
+        """ Takes a key argument of either type string or int and performs hash function to produce some index """
+        
+        if type(key) == int:
+            # Use division hash algorithm h(key) = key % capacity
+            return key % self.capacity
+        if type(key) == str:
+            # Use ASCII characters: h(key) = sum(a for c in s) % capacity
+            # where a is ascii value, c is the character, s is the string input
+            return (sum(ord(c) for c in key) % self.capacity)
+
+    def insert(self, item: any) -> None:
+        """ Inserts an item into the hash table """
+        
+        index = self._hash(item)
+        self.table[index].append(item)
+
+    def remove(self, item: any) -> None:
+        """ Remove an item from the hash table """
+
+        index = self._hash(item)
+        if item not in self.table[index]:
+            return
+        self.table[index].remove(item)
+    
+    def print(self) -> None:
+        """ Prints the contents of the hash table """
+        
+        for i in range(self.capacity):
+            print(f"{i}", end="")
+            for j in self.table[i]:
+                print(f" --> {j}", end="")
+            print()
+    
+    def _getCapacity(self) -> int:
+        """ Returns capacity of hash table """
+        return self.capacity
