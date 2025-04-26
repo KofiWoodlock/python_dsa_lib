@@ -976,6 +976,8 @@ class BST:
         self.root = None
 
     def insert(self, val: any) -> None:
+        """ Inserts a value into the binary search tree """
+
         newNode = TreeNode(val)
 
         if self.__isEmpty():
@@ -998,21 +1000,28 @@ class BST:
         return
     
     def remove(self, val: any) -> None:
+        """ Removes a value from the binary search tree """
         pass
 
     def search(self, val: any) -> bool:
+        """ Searches for a specified value in the binary search tree, returns true if found else false """
+        
+        curr = self.root
+        while curr:
+            if curr.val == val:
+                return True
+            elif curr.val > val:
+                curr = curr.left
+            else:
+                curr = curr.right
+        return False
+
+    def floor(self, k: int) -> None:
+        """ Returns the largest element that is less than or equal to k """
         pass
 
-    def minVal(self) -> any:
-        pass
-
-    def minVal(self) -> any:
-        pass
-
-    def floor(self) -> None:
-        pass
-
-    def ceil(self) -> None:
+    def ceil(self, k: int) -> None:
+        """ Returns the smallest values that is greater than or equal to k """
         pass
 
     def print(self) -> None:
@@ -1046,10 +1055,17 @@ class BST:
             
             level_nodes = new_level_nodes
 
+    def __minVal(self, root: TreeNode) -> any:
+        """ Returns the minimum node of a subtree specified by an input root """
+
+        curr = root
+        while curr and curr.left:
+            curr = curr.left 
+        return curr 
+
     def __getHeight(self, node) -> int:
-        """
-        Helper function to calculate height of binary search tree 
-        """
+        """ Helper function to calculate height of binary search tree """
+
         if not node:
             return 0
         return 1 + max(self.__getHeight(node.left), self.__getHeight(node.right)) 
