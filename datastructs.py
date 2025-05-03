@@ -771,40 +771,50 @@ class PointerBinaryTree:
     def pop(self) -> any:
         pass
         
-    def preOrder(self, root) -> list:
+    def preOrder(self) -> list:
         """
         Returns a list of nodes in pre-order (root, left, right)  
         """
+        return self._preOrder(self.root) 
+        
+    def _preOrder(self, root) -> list:
         if not root:
             return
 
         self.__preOutput.append(root.val)
-        self.preOrder(root.left)
-        self.preOrder(root.right)
+        self._preOrder(root.left)
+        self._preOrder(root.right)
         return self.__preOutput
         
 
-    def inOrder(self, root) -> list:
+    def inOrder(self) -> list:
         """
         Returns a list of nodes in-order (left, root, right) 
         """
+
+        return self._inOrder(self.root)
+    
+    def _inOrder(self, root) -> list:
         if not root:
             return
 
-        self.inOrder(root.left)
+        self._inOrder(root.left)
         self.__inOutput.append(root.val)
-        self.inOrder(root.right)
+        self._inOrder(root.right)
         return self.__inOutput
 
-    def postOrder(self, root) -> list:
+    def postOrder(self) -> list:
         """
         Returns a list of nodes in post-order (left, right, root) 
         """
+        return self._postOrder(self.root)
+    
+    def _postOrder(self, root) -> list:
         if not root:
             return 
 
-        self.postOrder(root.left)
-        self.postOrder(root.right)
+        self._postOrder(root.left)
+        self._postOrder(root.right)
         self.__postOutput.append(root.val)
         return self.__postOutput
     
@@ -1001,7 +1011,20 @@ class BST:
     
     def remove(self, val: any) -> None:
         """ Removes a value from the binary search tree """
-        pass
+        
+        if self.__isEmpty():
+            return
+
+        curr = self.root
+        while curr: 
+            if curr.val > val:
+                curr = curr.left
+            elif curr.val < val:
+                curr = curr.right
+            else:
+                if not curr.left:
+                    pass 
+        return False
 
     def search(self, val: any) -> bool:
         """ Searches for a specified value in the binary search tree, returns true if found else false """
@@ -1176,3 +1199,4 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity
+    
