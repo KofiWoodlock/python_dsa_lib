@@ -818,8 +818,28 @@ class PointerBinaryTree:
         self.__postOutput.append(root.val)
         return self.__postOutput
     
-    def levelOrder(self, root) -> list:
-        pass
+    def levelOrder(self) -> list:
+        """ Returns a list of nodes in a level order fashion computing left to right """
+
+        return self._levelOrder(self.root)
+    
+    def _levelOrder(self, root) -> list:        
+        q = Queue()
+        out = []
+
+        if root:
+            q.enqueue(root)
+
+        while q.length > 0:
+            for i in range(q.length):
+                curr = q.dequeue()
+                out.append(curr.val)
+                if curr.left:
+                    q.enqueue(curr.left)
+                if curr.right:
+                    q.enqueue(curr.right)
+        
+        return out
 
     def maxHeight(self) -> int:
         pass
@@ -1198,5 +1218,5 @@ class HashTable:
     
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
-        return self.capacity
-    
+        return self.capacity 
+
