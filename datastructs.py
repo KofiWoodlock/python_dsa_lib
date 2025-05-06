@@ -3,14 +3,41 @@
 # Static array - A structure consisting of elements of the same type, identifiable by an index, 
 #              stored contiguosly in memory. It's size is not changeable 
 class Array:
-    def __init__(self, size: int, type: type) -> None:
-        self.arr = [None] * size
-        self.type = type
-        self.size = size
-        self.length = 0
+    """
+    A structure to store a fixed number of homogenous types contiguosly in memory 
+    
+    ... 
 
-    # Appends an element to the end of the array
+    Attributes:
+    ----------
+    arr: list
+        The actual array that stores the values 
+    type:
+        The specified data type that the array will store 
+    size: 
+        The maximum capacity of the array
+    length:
+        The number of elements the array currently contains
+    
+    Methods:
+    -------
+    append(val)
+        Adds an element to the end of the array
+    delete(val)
+        Removes first occurence of specified value
+    insertAt(index, val)
+    """
+    def __init__(self, size: int, type: type) -> None:
+        self.arr: list = [None] * size
+        self.type = type
+        self.size: int = size
+        self.length: int = 0
+
     def append(self, val) -> None:
+        """ 
+        Appends an element to the end of the array
+        """
+
         self.__checkType(val)
         if self.__isFull():
             raise Exception("Cannot append to full array.")
@@ -18,8 +45,11 @@ class Array:
         self.arr[self.length] = val
         self.length += 1
 
-    # Deletes the first occurence of a specified value in the array
     def delete(self, val) -> None:
+        """
+        Deletes the first occurence of a specified value in the array
+        """
+
         found = False
         for i in range(self.length):
             if found:
@@ -30,16 +60,22 @@ class Array:
         if found:
             self.length -= 1
         
-    # Inserts & overwrites an element at a given index within the array 
     def insertAt(self, index: int, val) -> None:
+        """
+        Inserts and overwrites an elements at a given index within the array 
+        """
+
         self.__checkType(val)
         if index < 0 or index >= self.length:
             raise IndexError("Index out of bounds")
 
         self.arr[index] = val
 
-    # Removes an element at a given index from the array
     def removeAt(self, index: int) -> None:
+        """
+        Removes an element at a given index from the array 
+        """
+
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
         if index < 0 or index > self.length:
@@ -48,8 +84,11 @@ class Array:
         self.__shiftLeft(index)
         self.length -=1
                 
-    # Removes & returns the last element in the array
     def pop(self):
+        """
+        Removes and returns the last element in the array 
+        """
+
         if self.__isEmpty():
             raise Exception("Cannot pop from empty array.")
         
@@ -58,26 +97,43 @@ class Array:
         self.length -= 1
         return val
     
-    # Reverses the array 
     def reverse(self) -> None:
+        """ 
+        Reverses the contents of the array 
+        """
+
         if self.__isEmpty():
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[:self.length][::-1]
 
-    def sort(self):
+    def sort(self, desc: bool = False):
+        """
+        Sorts the contents of the array defaults to ascending order
+        """
         pass
 
     def get(self, index: int):
+        """
+        Returns the element at a given index
+        """
+
         return self.arr[index]
 
-    # Finds an element in the array and returns its index
     def find(self, val) -> int:
+        """
+        Returns the index of a given value otherwise returns -1
+        """
+
         for i in range(self.length):
             if self.arr[i] == val:
                 return i
         return -1 
 
     def print(self) -> None:
+        """
+        Prints contents of the array
+        """
+
         print(self.arr[:self.length])
 
     def __isEmpty(self) -> bool:
