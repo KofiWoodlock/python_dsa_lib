@@ -2,7 +2,7 @@
  
 class Array:
     """
-    static array - A structure consisting of elements of the same type, identifiable by an index, 
+    Static array - A structure consisting of elements of the same type, identifiable by an index, 
                 stored contiguosly in memory. It's size is not changeable
     ... 
 
@@ -39,10 +39,6 @@ class Array:
 
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
-        
-        """ 
-        Appends an element to the end of the array
-        """
 
         self.__checkType(val)
         if self.__isFull():
@@ -76,8 +72,7 @@ class Array:
             raise IndexError("Index out of bounds")
 
         self.arr[index] = val
-
-    
+ 
     def removeAt(self, index: int) -> None:
         """
         Removes an element at a given index from the array 
@@ -115,12 +110,26 @@ class Array:
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[self.length-1::-1]
 
-    def sort(self, desc: bool = False):
+    def sort(self, desc: bool=False) -> None:
         """
         Sorts the contents of the array defaults to ascending order
-        """
-        pass
 
+        :param bool desc: Sorts array in descending order
+        """
+        self.arr = self.__sort(self.arr, desc) 
+
+    def __sort(self, arr: list, desc: bool) -> list:
+       if len(arr) <= 1:
+           return arr
+       
+       mid = len(arr) // 2
+       left_half = arr[:mid] 
+       right_half = arr[mid:self.length]
+
+       left_half = self.__sort(left_half, desc)
+       right_half = self.__sort(right_half, desc)
+       return self.__merge(left_half, right_half, desc)
+    
     def get(self, index: int):
         """
         Returns the element at a given index
@@ -153,13 +162,50 @@ class Array:
     def __shiftLeft(self, i: int):
         for index in range(i+1, self.size):
             self.arr[index-1] = self.arr[index]
+    
+    def __checkType(self, val) -> bool:
+        if type(val) == self.type:
+            return True
+        return False
+    
+    def __merge(self, left: list, right: list, desc: bool) -> list:
+        res = []
+        i = 0
+        j = 0
+
+        while i < len(left) and j < len(right):
+            if not desc:
+                if left[i] < right[j]:
+                    res.append(left[i])
+                    i += 1
+                else:
+                    res.append(right[j])
+                    j += 1 
+            else:
+                if left[i] > right[j]:
+                    res.append(left[i])
+                    i += 1
+                else:
+                    print(right)
+                    res.append[right[j]]
+                    j += 1
+
+        while i < len(left):
+            res.append(left[i])
+            i += 1
+        while j < len(right):
+            res.append(right[j])
+            j += 1
+        
+        return res
 
 class DynamicArray:
     """
-    dynamic array - A structure consisting of elements of the same type, identifiable by an index, stored contiguosly in memory. It's size is changeable during runtime
+    Dynamic array - A structure consisting of elements of the same type, identifiable by an index, stored contiguosly in memory. 
+                    It's size is changeable during runtime
     """
 
-    def __init__(self, type: any) -> None:
+    def __init__(self, type) -> None:
         self.type = type
         self.size = 2
         self.length = 0
@@ -169,6 +215,7 @@ class DynamicArray:
         """
         Appends an element to the end of the array
         """
+
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
         
@@ -183,6 +230,7 @@ class DynamicArray:
         """
         Removes & returns the last element in the array
         """
+
         if self.__isEmpty():
             raise Exception("Cannot pop from empty array.")
         
@@ -191,10 +239,11 @@ class DynamicArray:
         self.length -= 1
         return value 
     
-    def insertAt(self, val: any, index: int) -> None:
+    def insertAt(self, val, index: int) -> None:
         """
         Inserts & overwrites an element at a given index within the array
         """
+
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
         
@@ -207,10 +256,11 @@ class DynamicArray:
         self.arr[index] = val
 
     
-    def removeAt(self, val: any, index: int) -> None:
+    def removeAt(self, val, index: int) -> None:
         """
         Removes an element at a given index from the array
         """
+
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
         
@@ -225,15 +275,21 @@ class DynamicArray:
         """
         Reverses the array
         """
+
         if self.__isEmpty():
             raise Exception("Cannot reverse empty array.")
         self.arr[:self.length] = self.arr[self.length-1::-1]
 
+    def sort(self, desc: bool=False) -> None:
+        """
+        Sorts the array in ascending order by default  
+        """
 
     def get(self, index: int) -> any:
         """
         Returns an element at a given index 
         """
+
         if self.__isEmpty():
             raise IndexError("Cannot use get on empty array.")
         
@@ -256,7 +312,8 @@ class DynamicArray:
            
 class Stack:
     """
-    stack - A structure consiting of elements that can be of different types. Operates in the last-in-first-out (LIFO) principle. 
+    Stack - A structure consiting of elements that can be of different types. 
+            Operates in the last-in-first-out (LIFO) principle. 
     """
     def __init__(self):
         self.stack = [] 
@@ -281,17 +338,20 @@ class ListNode:
     
 class SinglyLL:
     """
-    linked list - a structure similar to an array but the elements are not stored contiguosly in memory, in fact they are linked together via pointers to ones memory address 
-
+    Singly Linked list - a structure similar to an array 
+                but the elements are not stored contiguosly in memory, 
+                they are linked together via pointers to ones memory address 
     """
+
     def __init__(self) -> None:
         self.head = None
         self.tail = None
 
-    def insertHead(self, val: any) -> None:
+    def insertHead(self, val) -> None:
         """
         Inserts an element at the front (head) of the linked list 
         """
+
         new_node = ListNode(val)
 
         if self.__isEmpty():
@@ -302,10 +362,11 @@ class SinglyLL:
         new_node.next = self.head
         self.head = new_node
 
-    def insertTail(self, val: any) -> None:
+    def insertTail(self, val) -> None:
         """
         Inserts an element at the end (tail) of the linked list 
         """
+
         new_node = ListNode(val)
 
         if self.__isEmpty():
@@ -315,12 +376,12 @@ class SinglyLL:
         
         self.tail.next = new_node
         self.tail = self.tail.next
-
     
     def removeHead(self) -> None:
         """
         Removes first (head) element from the linked list
         """
+
         if self.__isEmpty():
             raise Exception("Cannot remove from empty linked list")
         
@@ -331,6 +392,7 @@ class SinglyLL:
         """
         Removes element at a specified index 
         """
+
         i = 0 
         curr = self.head
         while i < index and curr:
@@ -342,6 +404,7 @@ class SinglyLL:
         """
         Reverses contents linked list 
         """
+
         if self.__isEmpty():
             raise Exception("Cannot reverse empty linked list.")
         
@@ -359,6 +422,7 @@ class SinglyLL:
         """
         Checks to see if some element is in the linked list & returns position
         """
+
         index = 0
         curr = self.head
         while curr:
@@ -382,7 +446,7 @@ class SinglyLL:
 
 class DoublyLL:
     """
-    doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous and next node via pointers 
+    Doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous and next node via pointers 
     """
     def __init__(self) -> None:
         self.head = None
@@ -394,6 +458,7 @@ class DoublyLL:
         """
         Inserts an element at the head (front) of the linked list 
         """
+
         new_node = ListNode(val)
         if self.__isEmpty():
             self.head = new_node
@@ -424,6 +489,7 @@ class DoublyLL:
         """
         Inserts an element at a given index 
         """
+
         if index < 0 or index > self.length:
             raise IndexError("Index out of bounds")
         
@@ -453,6 +519,7 @@ class DoublyLL:
         """
         Removes the element at the head (front) of the linked list
         """
+
         if self.__isEmpty():
             raise Exception("Cannot remove from empty list")
         
@@ -1207,10 +1274,8 @@ class MinHeap:
 class MaxHeap:
     pass
 
-
 class Vector:
     pass
-
 
 class HashTable:
     """
@@ -1260,3 +1325,14 @@ class HashTable:
         """ Returns capacity of hash table """
         return self.capacity 
 
+
+arr = Array(10, int)
+arr.append(38)
+arr.append(24)
+arr.append(16)
+arr.append(5)
+arr.append(9)
+arr.append(7)
+arr.print()
+arr.sort(desc=True)
+arr.print()
