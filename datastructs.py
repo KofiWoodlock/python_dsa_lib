@@ -213,10 +213,10 @@ class Array:
     def __isFull(self) -> bool:
         return self.length == self.size
 
-    def __shiftLeft(self, i: int):
-        for index in range(i, self.size):
-            self.arr[index-1] = self.arr[index]
-            self.arr[index] = None
+    def __shiftLeft(self, index: int):
+        for i in range(index, self.size):
+            self.arr[i-1] = self.arr[i]
+            self.arr[i] = None
     
     def __checkType(self, val: any) -> None:
         if type(val) == self.type:
@@ -292,11 +292,13 @@ class DynamicArray:
     def append(self, val: any) -> None:
         """
         Appends an element to the end of the array
+
+        :param val: Value appended to the end of the array
+
+        :raises TypeError: If type of value does not match specified type of array
         """
 
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
-        
+        self.__checkType(val)
         if self.length == self.size:
             self.__resize()
         
@@ -307,6 +309,8 @@ class DynamicArray:
     def pop(self) -> any:
         """
         Removes & returns the last element in the array
+
+        :raises Exception: If the array is empty 
         """
 
         if self.__isEmpty():
@@ -320,11 +324,15 @@ class DynamicArray:
     def insertAt(self, val: any, index: int) -> None:
         """
         Inserts & overwrites an element at a given index within the array
+
+        :param int index: Index that element will be inserted at
+        :param val: Value wthat will be inserted
+
+        :raises IndexError: If specified index is out of the array bounds
+        :raises TypeError: If type of value does not match specified type of array
         """
 
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
-        
+        self.__checkType(val) 
         if self.__isEmpty() and index > 0:
             raise Exception("Index specified does not exist as array is empty.")
         
@@ -337,18 +345,29 @@ class DynamicArray:
     def removeAt(self, index: int) -> None:
         """
         Removes an element at a given index from the array
+
+        :param int index: Index that element will be inserted at
+
+        :raises IndexError: If specified index is out of the array bounds
+        :raises Exception: If the array is empty
         """
 
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
 
+        if index < 0 or index > self.length-1:
+            raise IndexError("Index out of bounds.")
+
         self.arr[index] = None
+        self.__shiftLeft(index+1)
         self.length -= 1
 
     
     def reverse(self) -> None:
         """
         Reverses the array
+
+        :raises Exception: If the array is empty 
         """
 
         if self.__isEmpty():
@@ -383,6 +402,15 @@ class DynamicArray:
         for i in range(self.length):
             new_arr[i] = self.arr[i]
         self.arr = new_arr
+
+    def __shiftLeft(self, index: int):
+        for i in range(index, self.size):
+            self.arr[i-1] = self.arr[i]
+            self.arr[i] = None
+    
+    def __checkType(self, val: any) -> None:
+        if type(val) != self.type:
+            raise TypeError("Value must be of same type declared when initialising array.")
 
            
 class Stack:
@@ -1410,3 +1438,15 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity 
+
+arr = DynamicArray(int)
+arr.append(1)
+arr.append(2)
+arr.append(3)
+arr.append(4)
+arr.append(5)
+arr.print()
+print(arr.arr)
+arr.removeAt(0)
+arr.print()
+print(arr.arr)
