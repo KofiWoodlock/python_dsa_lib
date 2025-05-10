@@ -1,5 +1,5 @@
 # Common & custom data structures interface & implementation (C) KFW 2025 
- 
+
 class Array:
     """
     Static array - A structure consisting of elements of the same type, identifiable by an index, 
@@ -26,7 +26,7 @@ class Array:
     insertAt(index, val) 
     """
 
-    def __init__(self, size: int, type: any) -> None:
+    def __init__(self, size: int, type) -> None:
         self.arr = [None] * size
         self.type = type
         self.size: int = size
@@ -174,21 +174,20 @@ class Array:
         j = 0
 
         while i < len(left) and j < len(right):
-            if not desc:
-                if left[i] < right[j]:
-                    res.append(left[i])
-                    i += 1
-                else:
-                    res.append(right[j])
-                    j += 1 
-            else:
+            if desc:
                 if left[i] > right[j]:
                     res.append(left[i])
                     i += 1
                 else:
-                    print(right)
-                    res.append[right[j]]
+                    res.append(right[j])
                     j += 1
+            else:
+                if left[i] < right[j]:
+                    res.append(left[i])
+                    i += 1
+                else: 
+                    res.append(right[j])
+                    j += 1  
 
         while i < len(left):
             res.append(left[i])
@@ -557,7 +556,7 @@ class DoublyLL:
         self.length = 0
     
      
-    def find(self, target: any) -> int:
+    def find(self, target) -> int:
         """
         Checks to see if some element is in the linked list & returns position
         """
@@ -1324,15 +1323,3 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity 
-
-
-arr = Array(10, int)
-arr.append(38)
-arr.append(24)
-arr.append(16)
-arr.append(5)
-arr.append(9)
-arr.append(7)
-arr.print()
-arr.sort(desc=True)
-arr.print()
