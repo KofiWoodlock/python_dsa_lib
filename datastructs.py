@@ -35,6 +35,8 @@ class Array:
     def append(self, val) -> None:
         """
         Appends an element to the end of the array
+
+        :param val: value that will be appended to the array
         """
 
         if type(val) != self.type:
@@ -50,16 +52,21 @@ class Array:
     def delete(self, val) -> None:
         """
         Deletes the first occurence of a specified value in the array
+
+        :param val: value that will be deleted from the array
         """
 
         found = False
+        target_index = 0
         for i in range(self.length):
-            if found:
-                self.arr[i-1] = self.arr[i]
-            elif self.arr[i] == val:
+            if self.arr[i] == val:
                 found = True
+                target_index = i
         
         if found:
+            for i in range(target_index, self.length):
+                self.arr[i-1] = self.arr[i]
+                self.arr[i] = None
             self.length -= 1
         
     def insertAt(self, index: int, val) -> None:
