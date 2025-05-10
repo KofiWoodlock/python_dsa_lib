@@ -7,71 +7,98 @@ class Array:
     ... 
 
     Attributes:
-    ----------
+    -----------
     arr: list
-        The actual array that stores the values 
+        The actual array that stores the elements 
     type:
-        The specified data type that the array will store 
-    size: 
+        The specified data type of the elements that the array will store 
+    size: int
         The maximum capacity of the array
-    length:
+    length: int
         The number of elements the array currently contains
     
     Methods:
-    -------
+    --------
     append(val)
         Adds an element to the end of the array
     delete(val)
         Removes first occurence of specified value
     insertAt(index, val) 
+        Inserts and overwrites an element at a given index within the array 
+    removeAt(index)
+        Removes an element at a given index from the array 
+    pop()
+        Removes and returns the last element in the array 
+    reverse()
+        Reverses the contents of the array 
+    sort(desc)
+        Sorts the contents of the array defaults to ascending order
+    get(index)
+        Returns the element at a given index
+    find(val)
+        Finds an element in the array and returns its inded
+    print()
+        Prints contents of the array
     """
 
-    def __init__(self, size: int, type) -> None:
-        self.arr = [None] * size
+    def __init__(self, size: int, type: any) -> None:
+        self.arr: list = [None] * size
         self.type = type
         self.size: int = size
         self.length: int = 0
 
-    def append(self, val) -> None:
+    def append(self, val: any) -> None:
         """
         Appends an element to the end of the array
 
-        :param val: value that will be appended to the array
-        """
+        :param val: Value that will be appended to the array
 
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
+        :raises TypeError: If type of value does not match specified type of array
+        :raises OverflowError: If the max capacity of the array has been reached
+        """
 
         self.__checkType(val)
         if self.__isFull():
-            raise Exception("Cannot append to full array.")
+            raise OverflowError("Cannot append to full array.")
         
         self.arr[self.length] = val
         self.length += 1
 
-    def delete(self, val) -> None:
+    def delete(self, val: any) -> None:
         """
         Deletes the first occurence of a specified value in the array
 
-        :param val: value that will be deleted from the array
+        :param val: Value that will be deleted from the array
+
+        :raises Exception: If array is empty
+        :raises TypeError: If type of value does not match specified type of array
         """
 
-        found = False
-        target_index = 0
+        if self.__isEmpty():
+            raise Exception("Cannot delete from an empty array")
+        self.__checkType(val)
+
+        found: bool = False
+        target_index: int = 0
         for i in range(self.length):
             if self.arr[i] == val:
                 found = True
                 target_index = i
         
         if found:
-            for i in range(target_index, self.length):
-                self.arr[i-1] = self.arr[i]
-                self.arr[i] = None
+            self.arr[target_index] = None
+            self.__shiftLeft(target_index)
             self.length -= 1
         
     def insertAt(self, index: int, val) -> None:
         """
         Inserts and overwrites an elements at a given index within the array 
+
+        :param int index: Index that element will be inserted at
+        :param val: Value wthat will be inserted
+
+        :raises IndexError: If specified index is out of the array bounds
+        :raises TypeError: If type of value does not match specified type of array
         """
 
         self.__checkType(val)
@@ -83,6 +110,11 @@ class Array:
     def removeAt(self, index: int) -> None:
         """
         Removes an element at a given index from the array 
+
+        :param int index: Index that element will be removed from
+
+        :raises IndexError: If specified index is out of the array bounds
+        :raises Exception: If array is empty
         """
 
         if self.__isEmpty():
@@ -95,9 +127,12 @@ class Array:
         self.__shiftLeft(index)
         self.length -=1
                 
-    def pop(self):
+    def pop(self) -> any:
         """
         Removes and returns the last element in the array 
+
+        :return val: Last value in the array
+        :raises Exception: If array is empty
         """
 
         if self.__isEmpty():
@@ -111,6 +146,8 @@ class Array:
     def reverse(self) -> None:
         """ 
         Reverses the contents of the array 
+
+        :raises Exception: If array is empty
         """
 
         if self.__isEmpty():
@@ -129,9 +166,9 @@ class Array:
        if len(arr) <= 1:
            return arr
        
-       mid = len(arr) // 2
-       left_half = arr[:mid] 
-       right_half = arr[mid:self.length]
+       mid: int = len(arr) // 2
+       left_half: list = arr[:mid] 
+       right_half: list = arr[mid:self.length]
 
        left_half = self.__sort(left_half, desc)
        right_half = self.__sort(right_half, desc)
@@ -140,14 +177,24 @@ class Array:
     def get(self, index: int):
         """
         Returns the element at a given index
+
+        :param int index: Index of the element being accessed
+
+        :raises IndexError: If specified index is out of the array bounds
         """
+
+        if index < 0 or index > self.length:
+            raise IndexError("Index out of range.")
 
         return self.arr[index]
 
-    def find(self, val) -> int:
+    def find(self, val: any) -> int:
         """
-        Finds an element in the array and returns its inded
+        Finds an element in the array and returns its index
+
+        :param val: Value to be searched for
         """
+
         for i in range(self.arr):
             if self.arr[i] == val:
                 return i
@@ -167,13 +214,13 @@ class Array:
         return self.length == self.size
 
     def __shiftLeft(self, i: int):
-        for index in range(i+1, self.size):
+        for index in range(i, self.size):
             self.arr[index-1] = self.arr[index]
+            self.arr[index] = None
     
-    def __checkType(self, val) -> bool:
+    def __checkType(self, val: any) -> None:
         if type(val) == self.type:
-            return True
-        return False
+            raise TypeError("Value must be of same type declared when initialising array")
     
     def __merge(self, left: list, right: list, desc: bool) -> list:
         res = []
@@ -207,8 +254,33 @@ class Array:
 
 class DynamicArray:
     """
-    Dynamic array - A structure consisting of elements of the same type, identifiable by an index, stored contiguosly in memory. 
+    Dynamic array - A structure consisting of elements of the same type, 
+                    identifiable by an index, stored contiguosly in memory. 
                     It's size is changeable during runtime
+    ...
+
+    Attributes:
+    -----------
+    arr: list
+        The actual array that stores the elements  
+    type:
+        The specified data type of the elements that the array will store
+    size: int
+        The capacity of the array (dynamic)
+    length: int
+        The number of elements currently in the array
+
+    Methods:
+    --------
+
+    append(val)
+    pop()
+    insertAt(val, index)
+    removeAt(index)
+    reverse()
+    sort(desc)
+    get(index)
+    print()
     """
 
     def __init__(self, type) -> None:
@@ -217,7 +289,7 @@ class DynamicArray:
         self.length = 0
         self.arr = [None] * self.size
 
-    def append(self, val) -> None:
+    def append(self, val: any) -> None:
         """
         Appends an element to the end of the array
         """
@@ -245,7 +317,7 @@ class DynamicArray:
         self.length -= 1
         return value 
     
-    def insertAt(self, val, index: int) -> None:
+    def insertAt(self, val: any, index: int) -> None:
         """
         Inserts & overwrites an element at a given index within the array
         """
@@ -262,14 +334,11 @@ class DynamicArray:
         self.arr[index] = val
 
     
-    def removeAt(self, val, index: int) -> None:
+    def removeAt(self, index: int) -> None:
         """
         Removes an element at a given index from the array
         """
 
-        if type(val) != self.type:
-            raise TypeError("Value must be of same type declared when initialising array.")
-        
         if self.__isEmpty():
             raise Exception("Cannot remove from empty array.")
 
@@ -320,7 +389,18 @@ class Stack:
     """
     Stack - A structure consiting of elements that can be of different types. 
             Operates in the last-in-first-out (LIFO) principle. 
+
+    Attributes:
+    -----------
+    
+    stack: list
+        The underlying array which stores elemetns on the stack
+
+    Methods:
+    --------
+
     """
+
     def __init__(self):
         self.stack = [] 
 
