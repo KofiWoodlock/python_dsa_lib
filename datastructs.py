@@ -1,5 +1,4 @@
 # Common & custom data structures interface & implementation (C) KFW 2025 
-from typing import Optional
 
 class Array:
     """
@@ -1382,9 +1381,23 @@ class BST:
                 curr = curr.right
         return False
 
-    def floor(self, k: int) -> None:
+    def floor(self, k: int) -> int:
         """ Returns the largest element that is less than or equal to k """
-        pass
+        
+        return self.__floor(k, self.root)
+
+    def __floor(self, k: int, root: TreeNode) -> int:
+        if not root:
+            return -1
+
+        if root.val == k:
+            return root.val        
+        if root.val > k:
+            return self.__floor(k, root.left)
+        
+        floor: TreeNode | int = self.__floor(k, root.right)
+        return floor if floor <= k and floor != -1 else root.val
+
 
     def ceil(self, k: int) -> None:
         """ Returns the smallest values that is greater than or equal to k """
