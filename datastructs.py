@@ -274,20 +274,28 @@ class DynamicArray:
     --------
 
     append(val)
+        Appends an element to the end of the array
     pop()
+        Removes & returns the last element in the array
     insertAt(val, index)
+        Inserts & overwrites an element at a given index within the array
     removeAt(index)
+        Removes an element at a given index from the array
     reverse()
+        Reverses the array
     sort(desc)
+        Sorts the array in ascending order by default  
     get(index)
+        Returns an element at a given index 
     print()
+        Prints contents of the array
     """
 
     def __init__(self, type) -> None:
         self.type = type
-        self.size = 2
-        self.length = 0
-        self.arr = [None] * self.size
+        self.size: int = 2
+        self.length: int = 0
+        self.arr: list = [None] * self.size
 
     def append(self, val: any) -> None:
         """
@@ -316,7 +324,7 @@ class DynamicArray:
         if self.__isEmpty():
             raise Exception("Cannot pop from empty array.")
         
-        value = self.arr[self.length-1]
+        value: any = self.arr[self.length-1]
         self.arr[self.length-1] = None
         self.length -= 1
         return value 
@@ -379,6 +387,20 @@ class DynamicArray:
         Sorts the array in ascending order by default  
         """
 
+        self.arr = self.__sort(self.arr, desc)
+    
+    def __sort(self, arr: list, desc: bool) -> list:
+       if len(arr) <= 1:
+           return arr
+       
+       mid: int = len(arr) // 2
+       left_half: list = arr[:mid] 
+       right_half: list = arr[mid:self.length]
+
+       left_half = self.__sort(left_half, desc)
+       right_half = self.__sort(right_half, desc)
+       return self.__merge(left_half, right_half, desc)
+
     def get(self, index: int) -> any:
         """
         Returns an element at a given index 
@@ -390,6 +412,10 @@ class DynamicArray:
         return self.arr[index]
     
     def print(self) -> None:
+        """ 
+        Prints contents of the array 
+        """
+
         print(self.arr[:self.length])
 
     def __isEmpty(self) -> bool:
@@ -411,6 +437,36 @@ class DynamicArray:
     def __checkType(self, val: any) -> None:
         if type(val) != self.type:
             raise TypeError("Value must be of same type declared when initialising array.")
+
+    def __merge(self, left: list, right: list, desc: bool) -> list:
+        res = []
+        i = 0
+        j = 0
+
+        while i < len(left) and j < len(right):
+            if desc:
+                if left[i] > right[j]:
+                    res.append(left[i])
+                    i += 1
+                else:
+                    res.append(right[j])
+                    j += 1
+            else:
+                if left[i] < right[j]:
+                    res.append(left[i])
+                    i += 1
+                else: 
+                    res.append(right[j])
+                    j += 1  
+
+        while i < len(left):
+            res.append(left[i])
+            i += 1
+        while j < len(right):
+            res.append(right[j])
+            j += 1
+        
+        return res
 
            
 class Stack:
@@ -1223,6 +1279,7 @@ class BST:
                       Meaning nodes smaller than the root will be inserted into the left subtree 
                       whereas nodes larger than the root will be inserted into the right subtree.
     """
+
     def __init__(self):
         self.root = None
 
@@ -1438,15 +1495,3 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity 
-
-arr = DynamicArray(int)
-arr.append(1)
-arr.append(2)
-arr.append(3)
-arr.append(4)
-arr.append(5)
-arr.print()
-print(arr.arr)
-arr.removeAt(0)
-arr.print()
-print(arr.arr)
