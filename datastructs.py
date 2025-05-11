@@ -1,4 +1,5 @@
 # Common & custom data structures interface & implementation (C) KFW 2025 
+from typing import Optional
 
 class Array:
     """
@@ -533,12 +534,14 @@ class Stack:
 
         print(self.stack)
 
+
 class ListNode:
     def __init__(self, val: any) -> None:
-            self.val = val
-            self.next = None
-            self.prev = None
-    
+            self.val: any = val
+            self.next: ListNode = None
+            self.prev: ListNode = None
+
+  
 class SinglyLL:
     """
     Singly Linked list - a structure similar to an array 
@@ -547,15 +550,15 @@ class SinglyLL:
     """
 
     def __init__(self) -> None:
-        self.head = None
-        self.tail = None
+        self.head: ListNode = None
+        self.tail: ListNode = None
 
-    def insertHead(self, val) -> None:
+    def insertHead(self, val: any) -> None:
         """
         Inserts an element at the front (head) of the linked list 
         """
 
-        new_node = ListNode(val)
+        new_node: ListNode = ListNode(val)
 
         if self.__isEmpty():
             self.head = new_node
@@ -565,12 +568,12 @@ class SinglyLL:
         new_node.next = self.head
         self.head = new_node
 
-    def insertTail(self, val) -> None:
+    def insertTail(self, val: any) -> None:
         """
         Inserts an element at the end (tail) of the linked list 
         """
 
-        new_node = ListNode(val)
+        new_node: ListNode = ListNode(val)
 
         if self.__isEmpty():
             self.head = new_node
@@ -626,18 +629,22 @@ class SinglyLL:
         Checks to see if some element is in the linked list & returns position
         """
 
-        index = 0
-        curr = self.head
+        position: int = 0
+        curr: ListNode = self.head
         while curr:
             if curr.val == target:
-                return index
+                return position
             else:
                 curr = curr.next
-                index += 1
+                position += 1
         return -1
 
     def print(self) -> None:
-        curr = self.head
+        """
+        Prints contents of the linked list 
+        """
+
+        curr: ListNode = self.head
         while curr != None:
             print(f"{curr.val}->",end="")
             curr = curr.next
@@ -787,17 +794,20 @@ class DoublyLL:
 
 class Queue:
     """
-    Queue - A structure consiting of elements that can be of different types. Operates in the first-in-first-out (FIFO) principle meaning the first element added will be the first element removed
+    Queue - A structure consiting of elements that can be of different types. 
+            Operates in the first-in-first-out (FIFO) principle 
+            meaning the first element added will be the first element removed
     """
     def __init__(self) -> None:
-        self.first = self.last = None
-        self.length = 0
+        self.first: ListNode = None 
+        self.last: ListNode = None
+        self.length: int = 0
 
     def enqueue(self, val: any) -> None:
         """
          Adds an item to the front of the queue 
         """
-        new_node = ListNode(val)
+        new_node: ListNode = ListNode(val)
         
         if self.__isEmpty():
             self.first = self.last = new_node
@@ -848,6 +858,7 @@ class Queue:
 
     def __isEmpty(self) -> int:
         return self.length == 0
+
 
 class Deque:
     """
@@ -903,15 +914,18 @@ class Deque:
     def __isEmpty(self) -> bool:
         return not self.front
 
+
 class CircularQueue:
     """
     Circular queue - similar to a regular queue except the last element in the queue is connected to
                   the first element, forming a circle. A circualr queue still operates in the first-in-first-out (FIFO)
                   principle
     """
-    def __init__(self, size: int, ):
-        self.queue = Array()
-
+    def __init__(self, size: int, type: any):
+        self.size: int = size
+        self.type: any = type
+        self.queue: list = [None] * self.size
+        
     def enqueue(self, val: any) -> None:
         """
         Adds an item to the front of the queue 
@@ -943,6 +957,7 @@ class PriorityQueue:
                   Elements with a higher priority are retrieved and removed first                   
     """
     pass
+
 
 class CircularBuffer:
     """
@@ -1002,9 +1017,9 @@ class TreeNode:
     Helper class for BinaryTree & Binary Search Tree classes  
     """
     def __init__(self, val: any) -> None:
-        self.val = val
-        self.left = None
-        self.right = None
+        self.val: any = val
+        self.left: TreeNode = None
+        self.right: TreeNode = None
 
 class PointerBinaryTree:
     """
@@ -1013,12 +1028,7 @@ class PointerBinaryTree:
                a maximum of two child nodes. Nodes are implemented using pointers.  
     """
     def __init__(self) -> None:
-        self.root = None
-        self.__preOutput = []
-        self.__inOutput = []
-        self.__postOutput = []
-        self.__levelOutput = []
-
+        self.root: TreeNode = None
 
     def insert(self, val: any) -> None:
         """
@@ -1088,10 +1098,11 @@ class PointerBinaryTree:
         return self._preOrder(self.root) 
         
     def _preOrder(self, root) -> list:
+        out = []
         if not root:
             return
 
-        self.__preOutput.append(root.val)
+        out.append(root.val)
         self._preOrder(root.left)
         self._preOrder(root.right)
         return self.__preOutput
@@ -1105,11 +1116,12 @@ class PointerBinaryTree:
         return self._inOrder(self.root)
     
     def _inOrder(self, root) -> list:
+        out = []
         if not root:
             return
 
         self._inOrder(root.left)
-        self.__inOutput.append(root.val)
+        out.append(root.val)
         self._inOrder(root.right)
         return self.__inOutput
 
@@ -1120,13 +1132,14 @@ class PointerBinaryTree:
         return self._postOrder(self.root)
     
     def _postOrder(self, root) -> list:
+        out = []
         if not root:
             return 
 
         self._postOrder(root.left)
         self._postOrder(root.right)
-        self.__postOutput.append(root.val)
-        return self.__postOutput
+        out.append(root.val)
+        return out
     
     def levelOrder(self) -> list:
         """ Returns a list of nodes in a level order fashion computing left to right """
@@ -1152,7 +1165,7 @@ class PointerBinaryTree:
         return out
 
     def maxHeight(self) -> int:
-        pass
+        return self.__getHeight(self.root)
 
     def maxDepth(self) -> int:
         pass
@@ -1299,7 +1312,6 @@ class ArrayBinaryTree:
         else:
             return None
  
-
     def print(self) -> None:
         print(self.tree[1:])
 
