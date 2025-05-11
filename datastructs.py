@@ -223,9 +223,9 @@ class Array:
             raise TypeError("Value must be of same type declared when initialising array")
     
     def __merge(self, left: list, right: list, desc: bool) -> list:
-        res = []
-        i = 0
-        j = 0
+        res: list = []
+        i: int = 0
+        j: int = 0
 
         while i < len(left) and j < len(right):
             if desc:
@@ -251,6 +251,7 @@ class Array:
             j += 1
         
         return res
+
 
 class DynamicArray:
     """
@@ -423,7 +424,7 @@ class DynamicArray:
 
     def __resize(self) -> None:
         self.size *= 2
-        new_arr = [None] * self.size
+        new_arr: list = [None] * self.size
 
         for i in range(self.length):
             new_arr[i] = self.arr[i]
@@ -439,9 +440,9 @@ class DynamicArray:
             raise TypeError("Value must be of same type declared when initialising array.")
 
     def __merge(self, left: list, right: list, desc: bool) -> list:
-        res = []
-        i = 0
-        j = 0
+        res: list = []
+        i: int = 0
+        j: int = 0
 
         while i < len(left) and j < len(right):
             if desc:
@@ -475,29 +476,61 @@ class Stack:
             Operates in the last-in-first-out (LIFO) principle. 
 
     Attributes:
-    -----------
-    
+    ----------- 
     stack: list
         The underlying array which stores elemetns on the stack
 
     Methods:
     --------
-
+    push(val)
+        Adds a value to the top of the stack 
+    pop()
+        Removes and returns the top value of the stack 
+    peek()
+        Prints the top value of the stack 
+    clear()
+        Clears contents of stack
+    print()
+        Prints contents of stack
     """
 
     def __init__(self):
-        self.stack = [] 
+        self.stack: list = [] 
 
     def push(self, val: any) -> None:
+        """
+        Adds a value to the top of the stack 
+        """
+
         self.stack.append(val)
 
     def pop(self) -> any:
+        """
+        Removes and returns the top value of the stack 
+        """
+
         self.stack.pop()
 
     def peek(self) -> None:
+        """
+        Prints the top value of the stack 
+        """
+
         print(self.stack[-1])
+    
+    def clear(self) -> None:
+        """
+        Clears contents of stack 
+        """
+
+        while self.stack:
+            self.stack.pop()
 
     def print(self) -> None:
+        """
+        Prints contents of stack
+        """
+
         print(self.stack)
 
 class ListNode:
