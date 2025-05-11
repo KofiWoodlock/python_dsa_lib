@@ -1399,9 +1399,22 @@ class BST:
         return floor if floor <= k and floor != -1 else root.val
 
 
-    def ceil(self, k: int) -> None:
+    def ceil(self, k: int) -> int:
         """ Returns the smallest values that is greater than or equal to k """
-        pass
+        
+        return self.__ceil(k, self.root)
+    
+    def __ceil(self, k: int, root: TreeNode) -> int:
+        if not root:
+            return -1
+        
+        if root.val == k:
+            return root.val
+        if root.val < k:
+           return self.__ceil(k, root.right) 
+        
+        ceil: TreeNode | int = self.__ceil(k, root.left)
+        return ceil if ceil >= k else root.val
 
     def print(self) -> None:
         if self.__isEmpty():
