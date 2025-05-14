@@ -405,10 +405,15 @@ class DynamicArray:
     def get(self, index: int) -> any:
         """
         Returns an element at a given index 
+
+        :raises IndexError: If specified index is out of the array bounds
+        :raises Exception: If the array is empty
         """
 
         if self.__isEmpty():
-            raise IndexError("Cannot use get on empty array.")
+            raise Exception("Cannot use get on empty array.")
+        if index < 0 or index > self.length-1:
+            raise IndexError("Index out of bounds.")
         
         return self.arr[index]
     
@@ -509,7 +514,7 @@ class Stack:
         Removes and returns the top value of the stack 
         """
 
-        self.stack.pop()
+        return self.stack.pop()
 
     def peek(self) -> None:
         """
@@ -537,8 +542,8 @@ class Stack:
 class ListNode:
     def __init__(self, val: any) -> None:
             self.val: any = val
-            self.next: ListNode = None
-            self.prev: ListNode = None
+            self.next: ListNode | None = None
+            self.prev: ListNode | None = None
 
   
 class SinglyLL:
@@ -546,11 +551,32 @@ class SinglyLL:
     Singly Linked list - a structure similar to an array 
                 but the elements are not stored contiguosly in memory, 
                 they are linked together via pointers to ones memory address 
+
+    Attributes:
+    -----------
+    head: ListNode
+        The first element in the linked list 
+    tail: ListNode
+        The last element in the linked list
+    
+    Methods:
+    --------
+    insertHead(val)
+        Inserts an element at the front (head) of the linked list 
+    insertTail(val)
+        Inserts an element at the end (tail) of the linked list 
+    removeHead()
+        Removes first (head) element from the linked list
+    removeTail()
+        Removes the last (tail) element from the linked list
+    removeAt(index)
+
     """
 
     def __init__(self) -> None:
         self.head: ListNode = None
         self.tail: ListNode = None
+        self.length: int = 0
 
     def insertHead(self, val: any) -> None:
         """
@@ -562,10 +588,12 @@ class SinglyLL:
         if self.__isEmpty():
             self.head = new_node
             self.tail = new_node
+            self.length += 1
             return
         
         new_node.next = self.head
         self.head = new_node
+        self.length += 1
 
     def insertTail(self, val: any) -> None:
         """
@@ -577,37 +605,70 @@ class SinglyLL:
         if self.__isEmpty():
             self.head = new_node
             self.tail = new_node
+            self.length += 1
             return
         
         self.tail.next = new_node
         self.tail = self.tail.next
+        self.length += 1
     
     def removeHead(self) -> None:
         """
         Removes first (head) element from the linked list
+
+        :raises Exception: If the linked list is empty 
         """
 
         if self.__isEmpty():
             raise Exception("Cannot remove from empty linked list")
         
         self.head = self.head.next
-
+        self.length -= 1
     
+    def removeTail(self) -> None: 
+        """ 
+        Removes the last (tail) element from the linked list 
+
+        :raises Exception: If the linked list is empty 
+        """
+
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty linked list")
+        
+        curr = self.head
+        while curr:
+            if curr.next is self.tail:
+                curr.next = None
+                self.tail = curr
+                self.length -= 1
+            elif curr.next and curr.next is not self.tail:
+                curr = curr.next
+            else:
+                break
+
+ 
     def removeAt(self, index: int) -> None:
         """
         Removes element at a specified index 
+
+        :raises IndexError: If specified index is out of the linked list bounds
         """
+
+        if index < 0 or index > self.length -1:
+            raise IndexError("Index is out of bounds")
 
         i = 0 
         curr = self.head
         while i < index and curr:
             i += 1
             curr = curr.next
-
+        self.length -= 1
 
     def reverse(self) -> None:
         """
         Reverses contents linked list 
+
+        :raises Exception: If the linked list is empty
         """
 
         if self.__isEmpty():
@@ -697,6 +758,8 @@ class DoublyLL:
     def insertAt(self, val: any, index: int) -> None:
         """
         Inserts an element at a given index 
+
+        :raises IndexError: 
         """
 
         if index < 0 or index > self.length:
