@@ -558,6 +558,8 @@ class SinglyLL:
         The first element in the linked list 
     tail: ListNode
         The last element in the linked list
+    length: int
+        The current length of the linked list
     
     Methods:
     --------
@@ -722,12 +724,27 @@ class SinglyLL:
 
 class DoublyLL:
     """
-    Doubly linked list - A structure similar to a singly linked list but each element within the list is connected to the previous and next node via pointers 
+    Doubly linked list - A structure similar to a singly linked list 
+                        but each element within the list is connected to the 
+                        previous and next node via pointers 
+    
+    Attributes:
+    -----------
+    head: ListNode
+        The first element in the linked list 
+    tail: ListNode
+        The last element in the linked list
+    length: int
+        The current length of the linked list
+    
+    Methods:
+    --------
     """
+
     def __init__(self) -> None:
-        self.head = None
-        self.tail = None
-        self.length = 0
+        self.head: ListNode | None = None
+        self.tail: ListNode | None = None
+        self.length: int = 0
     
 
     def insertHead(self, val: any) -> None:
@@ -735,7 +752,7 @@ class DoublyLL:
         Inserts an element at the head (front) of the linked list 
         """
 
-        new_node = ListNode(val)
+        new_node: ListNode = ListNode(val)
         if self.__isEmpty():
             self.head = new_node
             self.tail = new_node
@@ -750,7 +767,8 @@ class DoublyLL:
         """
         Inserts an element at the tail (end) of the linked list
         """
-        new_node = ListNode(val)
+
+        new_node: ListNode = ListNode(val)
         if self.__isEmpty():
             self.head = new_node
             self.tail = new_node
@@ -765,7 +783,7 @@ class DoublyLL:
         """
         Inserts an element at a given index 
 
-        :raises IndexError: 
+        :raises IndexError: If the specified index is outside the bounds of the linked list 
         """
 
         if index < 0 or index > self.length:
@@ -778,7 +796,7 @@ class DoublyLL:
             self.insertTail(val)
             return
 
-        new_node = ListNode(val)
+        new_node: ListNode = ListNode(val)
         curr = self.head
         i = 0
         while i < index -1:
@@ -809,7 +827,12 @@ class DoublyLL:
         """
         Removes the element at the tail (end) of the linked list
         """
-        pass
+        
+        if self.__isEmpty():
+            raise Exception("Cannot remove from empty list")
+        
+        self.tail.prev.next = None
+        self.tail = self.tail.prev
 
 
     def removeAt(self) -> None:
@@ -823,6 +846,7 @@ class DoublyLL:
         """
         Removes all elements from the linked list
         """
+
         curr = self.head
         while curr:
             next_node = curr.next
@@ -839,6 +863,7 @@ class DoublyLL:
         """
         Checks to see if some element is in the linked list & returns position
         """
+
         index = 0
         curr = self.head
         while curr:
@@ -850,6 +875,8 @@ class DoublyLL:
         return -1
 
     def print(self) -> None:
+        """ Prints contents of linked list """
+
         curr = self.head
         while curr != None:
             print(f"{curr.val}<->",end="")
