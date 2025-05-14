@@ -570,7 +570,13 @@ class SinglyLL:
     removeTail()
         Removes the last (tail) element from the linked list
     removeAt(index)
-
+        Removes element at a specified index 
+    reverse()
+        Reverses contents linked list 
+    find(target)
+        Checks to see if some element is in the linked list & returns position
+    print()
+        Prints contents of the linked list 
     """
 
     def __init__(self) -> None:
@@ -657,8 +663,8 @@ class SinglyLL:
         if index < 0 or index > self.length -1:
             raise IndexError("Index is out of bounds")
 
-        i = 0 
-        curr = self.head
+        i: int = 0 
+        curr: ListNode = self.head
         while i < index and curr:
             i += 1
             curr = curr.next
@@ -674,7 +680,7 @@ class SinglyLL:
         if self.__isEmpty():
             raise Exception("Cannot reverse empty linked list.")
         
-        curr = self.head
+        curr: ListNode = self.head
         prev = None
         while curr:
             next = curr.next 
