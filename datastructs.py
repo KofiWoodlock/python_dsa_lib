@@ -1672,6 +1672,45 @@ class Matrix:
         
         self.matrix[row][column] = None
     
+    def search(self, target: any) -> bool:
+        """
+        Searches for an element within the matrix, return True if found else False
+        """
+
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.matrix[i][j] == target:
+                    return True
+        return False
+    
+    def add(self, m: 'Matrix') -> None:
+        """
+        Performs matrix addition with another N x M matrix
+
+        :raises Exception: If the matricies are not equal in size
+        """
+
+        if (m.rows != self.rows) or (m.columns != self.columns):
+            raise Exception("Matricies my be the same size")
+
+        for i in range(m.rows):
+            for j in range(m.columns):
+                self.matrix[i][j] += m.matrix[i][j]
+
+    def subtract(self, m: 'Matrix') -> None:
+        """
+        Performs matrix subtraction with another N x M matrix
+
+        :raises Exception: If the matricies are not equal in size
+        """
+
+        if (m.rows != self.rows) or (m.columns != self.columns):
+            raise Exception("Matricies my be the same size")
+
+        for i in range(m.rows):
+            for j in range(m.columns):
+                self.matrix[i][j] -= m.matrix[i][j]
+         
     def print(self) -> None:
         """
         Prints contents of the matrix
