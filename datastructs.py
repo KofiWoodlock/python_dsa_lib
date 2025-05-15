@@ -1116,6 +1116,7 @@ class TreeNode:
         self.left: TreeNode = None
         self.right: TreeNode = None
 
+
 class PointerBinaryTree:
     """
     Binary tree (pointer) - A structure in which data is arranged in a tree-like structure
@@ -1338,6 +1339,7 @@ class PointerBinaryTree:
     def __isEmpty(self) -> bool:
         return not self.root
 
+
 class ArrayBinaryTree:
     """
      Binary tree (array) - A structure in which data is arranged in a tree-like structure
@@ -1412,6 +1414,7 @@ class ArrayBinaryTree:
 
     def __isEmpty(self) -> bool:
         return self.size == 0
+
 
 class BST:
     """
@@ -1561,6 +1564,7 @@ class BST:
     def __isEmpty(self):
         return not self.root
 
+
 class MinHeap:
     """
     MinHeap - A structure in which the root node is the smallest value among its descendant nodes 
@@ -1609,11 +1613,35 @@ class MinHeap:
     def heapify(self, Iterable: list ) -> None:
         pass
 
+
 class MaxHeap:
     pass
 
+
 class Vector:
     pass
+
+
+class Matrix:
+    """
+    Matrix - A two-dimnensional structure arranged in rows and columns   
+    """
+
+    def __init__(self, rows: int, cols: int) -> None:
+        self.rows: int = rows
+        self.columns: int = cols
+        self.matrix: list[list] = [[None for col in range(cols)] for _ in range(rows)]
+    
+    def print(self) -> None:
+        """
+        Prints contents of the matrix
+        """
+
+        for i in range(self.rows):
+            for j in range(len(self.matrix[i])):
+                print(self.matrix[i][j], end=" ")
+            print()
+
 
 class HashTable:
     """
