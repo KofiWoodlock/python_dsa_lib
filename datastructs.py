@@ -1625,12 +1625,40 @@ class Vector:
 class Matrix:
     """
     Matrix - A two-dimnensional structure arranged in rows and columns   
+
+    Attributes:
+    -----------
+    matrix: list
+        The underlying array that stores the elements in the matrix 
+    rows: int
+        The number of rows in the matrix     
+    cols: int
+        The number of columns in the matrix 
+    
+    Methods:
+    --------
+    insert(val, row, column)
+        Inserts and overwrites a value into the matrix at a given position 
     """
 
     def __init__(self, rows: int, cols: int) -> None:
         self.rows: int = rows
         self.columns: int = cols
         self.matrix: list[list] = [[None for col in range(cols)] for _ in range(rows)]
+
+    def insert(self, val: any, row: int, column: int) -> None:
+        """ 
+        Inserts and overwrites a value into the matrix at a given position 
+
+        :raises IndexError: If the row or column is out of matrix bounds
+        """
+
+        if row < 0 or row > self.rows:
+            raise IndexError("Index out of bounds")
+        if column < 0 or column > self.columns:
+            raise IndexError("Index out of bounds")
+        
+        self.matrix[row][column] = val
     
     def print(self) -> None:
         """
@@ -1690,3 +1718,7 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity 
+
+m = Matrix(2, 2)
+m.insert(1, 0, 0)
+m.print()
