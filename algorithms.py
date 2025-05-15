@@ -1,8 +1,14 @@
 # Common algorithm implementations (C) KFW 2025
+from datastructs import *
 from typing import Iterable 
 
-# Linear search - An algorithm that checks each element in an iterable
+# ------------- Searching algorithms -------------
+
 def linearSearch(iterable: Iterable, target: any) -> bool:
+    """
+    Checks each element in iterable returns True if value is found else False
+    """
+
     for i in range(len(iterable)):
         if iterable[i] == target:
             return True
@@ -23,3 +29,34 @@ def binarySearch(iterable: Iterable, target: any) -> bool:
     return False
 
 
+def binaryTreeSearch(root: TreeNode, val: any) -> bool: 
+    curr = root
+    while curr:
+        if curr.val == val:
+            return True
+        elif curr.val > val:
+            curr = curr.left
+        else:
+            curr = curr.right
+    return False
+
+# ------------- Sorting algorithms -------------
+
+def bubbleSort(array: list) -> list:
+    for i in range(len(array)-1):
+        for j in range(i, len(array)-1):
+            if array[i] > array[j]:
+                temp = array[i]
+                array[i] = array[j]
+                array[j] = temp
+    
+    return array
+
+def mergeSort(iterable: Iterable) -> Iterable:
+    pass
+
+def quickSort(iterable: Iterable) -> Iterable:
+    pass
+
+def insertionSort(iterable: Iterable) -> Iterable:
+    pass
