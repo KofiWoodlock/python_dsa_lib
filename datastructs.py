@@ -1660,6 +1660,18 @@ class Matrix:
         
         self.matrix[row][column] = val
     
+    def remove(self, row: int, column: int) -> None:
+        """
+        Removes an element from the matrix at a specified index
+
+        :raises: Exception: If the index specified is empty
+        """
+
+        if self.matrix[row][column] == None:
+            raise Exception("Cannot remove empty element")
+        
+        self.matrix[row][column] = None
+    
     def print(self) -> None:
         """
         Prints contents of the matrix
@@ -1718,7 +1730,3 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity 
-
-m = Matrix(2, 2)
-m.insert(1, 0, 0)
-m.print()
