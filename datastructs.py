@@ -1737,14 +1737,38 @@ class HashTable:
     """
     Hash Table - A structure that creates a mapping between keys and values using hashing  
                  this implementation uses chaining to deal with collisions
+
+    Attributes:
+    -----------
+    capacity: int
+        The maximum size of the hash table
+    table: list
+        The actual hash table data structure
+
+    Methods:
+    --------
+    __hash(key)
+        Takes a key argument of either type string or int and performs hash function to produce some index 
+    insert(item)
+        Inserts an item into the hash table 
+    remove(item)
+        Removes an item from the hash table 
+    print()
+        Prints the contents of the hash table  
+    __getCapacity()
+        Getter method for capacity
     """
 
     def __init__(self, capacity: int) -> None:
-        self.capacity = capacity
-        self.table = [[] for _ in range(capacity)]
+        self.capacity: int = capacity
+        self.table: list[list] = [[] for _ in range(capacity)]
 
-    def _hash(self, key: any) -> int:
-        """ Takes a key argument of either type string or int and performs hash function to produce some index """
+    def __hash(self, key: any) -> int:
+        """ 
+        Takes a key argument of either type string or int and performs hash function to produce some index 
+
+        :param key: The key that will be mapped to a value
+        """
         
         if type(key) == int:
             # Use division hash algorithm h(key) = key % capacity
@@ -1755,21 +1779,31 @@ class HashTable:
             return (sum(ord(c) for c in key) % self.capacity)
 
     def insert(self, item: any) -> None:
-        """ Inserts an item into the hash table """
+        """ 
+        Inserts an item into the hash table 
+
+        :param item: Item that will be inserted into the hash table
+        """
         
-        index = self._hash(item)
+        index: int = self.__hash(item)
         self.table[index].append(item)
 
     def remove(self, item: any) -> None:
-        """ Remove an item from the hash table """
+        """ 
+        Removes an item from the hash table 
 
-        index = self._hash(item)
+        :param item: Item that will be removed from the hash table
+        """
+
+        index: int = self.__hash(item)
         if item not in self.table[index]:
             return
         self.table[index].remove(item)
     
     def print(self) -> None:
-        """ Prints the contents of the hash table """
+        """ 
+        Prints the contents of the hash table  
+        """
         
         for i in range(self.capacity):
             print(f"{i}", end="")
@@ -1777,15 +1811,4 @@ class HashTable:
                 print(f" --> {j}", end="")
             print()
     
-    def _getCapacity(self) -> int:
-        """ Returns capacity of hash table """
-        return self.capacity 
-
-m = Matrix(2, 2)
-m.insert(1, 0, 0)
-m.insert(2, 0, 1)
-m.insert(3, 1, 0)
-m.insert(4, 1, 1)
-m.print()
-m.scalarMultiply(2)
-m.print()
+    def __getCapacity(self) -> int: return self.capacity 
