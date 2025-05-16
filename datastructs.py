@@ -1619,7 +1619,8 @@ class MaxHeap:
 
 
 class Vector:
-    pass
+    """ 
+    """
 
 
 class Matrix:
@@ -1710,6 +1711,16 @@ class Matrix:
         for i in range(m.rows):
             for j in range(m.columns):
                 self.matrix[i][j] -= m.matrix[i][j]
+    
+    def scalarMultiply(self, k: int) -> None:
+        """
+        Multiplies matrix by given scalar k
+        """
+        
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.matrix[i][j] is not None:
+                    self.matrix[i][j] *= k
          
     def print(self) -> None:
         """
@@ -1769,3 +1780,12 @@ class HashTable:
     def _getCapacity(self) -> int:
         """ Returns capacity of hash table """
         return self.capacity 
+
+m = Matrix(2, 2)
+m.insert(1, 0, 0)
+m.insert(2, 0, 1)
+m.insert(3, 1, 0)
+m.insert(4, 1, 1)
+m.print()
+m.scalarMultiply(2)
+m.print()
