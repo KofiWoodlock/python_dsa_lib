@@ -1123,6 +1123,7 @@ class PointerBinaryTree:
                consiting of a root node, branch nodes and leaf nodes. Each node can have
                a maximum of two child nodes. Nodes are implemented using pointers.  
     """
+
     def __init__(self) -> None:
         self.root: TreeNode = None
 
@@ -1151,10 +1152,14 @@ class PointerBinaryTree:
                 curr.right = TreeNode(val)
                 return 
 
-    def remove(self, root, val: any) -> None:
+    def remove(self, val: any) -> None:
         """
         Removes a specified element from the tree and replaces it with bottom right-most node   
         """
+
+        self.root = self.__remove(self.root, val)
+    
+    def __remove(self, root: TreeNode, val: any) -> TreeNode:
         if self.__isEmpty():
             raise Exception("Cannot remove from empty tree")
 
@@ -1185,7 +1190,28 @@ class PointerBinaryTree:
         return root 
     
     def pop(self) -> any:
-        pass
+        """
+        Removes and returns the deepest node in binary tree 
+        """ 
+
+        q: Queue = Queue()
+        out: list = []
+
+        if self.root:
+            q.enqueue(self.root)
+
+        while q.length > 0:
+            for i in range(q.length):
+                curr = q.dequeue()
+                out.append(curr)
+                if curr.left:
+                    q.enqueue(curr.left)
+                if curr.right:
+                    q.enqueue(curr.right)
+        
+        val: any = out[-1].val
+        self.remove(out[-1].val)
+        return val
         
     def preOrder(self) -> list:
         """
@@ -1225,6 +1251,7 @@ class PointerBinaryTree:
         """
         Returns a list of nodes in post-order (left, right, root) 
         """
+
         return self._postOrder(self.root)
     
     def _postOrder(self, root) -> list:
@@ -1238,11 +1265,13 @@ class PointerBinaryTree:
         return out
     
     def levelOrder(self) -> list:
-        """ Returns a list of nodes in a level order fashion computing left to right """
+        """ 
+        Returns a list of nodes in a level order fashion computing left to right 
+        """
 
-        return self._levelOrder(self.root)
+        return self.__levelOrder(self.root)
     
-    def _levelOrder(self, root) -> list:        
+    def __levelOrder(self, root) -> list:        
         q = Queue()
         out = []
 
@@ -1313,6 +1342,7 @@ class PointerBinaryTree:
         """
         Helper function to delete deepest node in binary tree 
         """
+
         q = [root]
         while q:
             curr = q.pop(0)
@@ -1812,3 +1842,4 @@ class HashTable:
             print()
     
     def __getCapacity(self) -> int: return self.capacity 
+
