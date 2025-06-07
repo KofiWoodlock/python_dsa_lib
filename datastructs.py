@@ -1227,8 +1227,7 @@ class PointerBinaryTree:
         out.append(root.val)
         self._preOrder(root.left)
         self._preOrder(root.right)
-        return self.__preOutput
-        
+        return out
 
     def inOrder(self) -> list:
         """
@@ -1245,7 +1244,7 @@ class PointerBinaryTree:
         self._inOrder(root.left)
         out.append(root.val)
         self._inOrder(root.right)
-        return self.__inOutput
+        return out
 
     def postOrder(self) -> list:
         """
@@ -1509,6 +1508,58 @@ class BST:
             else:
                 curr = curr.right
         return False
+    
+    def preOrder(self) -> list:
+        """
+        Returns a list of nodes in pre-order (root, left, right)  
+        """
+        return self._preOrder(self.root) 
+        
+    def _preOrder(self, root) -> list:
+        out = []
+        if not root:
+            return
+
+        out.append(root.val)
+        self._preOrder(root.left)
+        self._preOrder(root.right)
+        return out
+
+    def inOrder(self) -> list:
+        """
+        Returns a list of nodes in-order (left, root, right) 
+        """
+
+        return self._inOrder(self.root)
+    
+    def _inOrder(self, root) -> list:
+        out = []
+        if not root:
+            return
+
+        self._inOrder(root.left)
+        out.append(root.val)
+        self._inOrder(root.right)
+        return out
+
+    def postOrder(self) -> list:
+        """
+        Returns a list of nodes in post-order (left, right, root) 
+        """
+
+        return self._postOrder(self.root)
+    
+    def _postOrder(self, root) -> list:
+        out = []
+        if not root:
+            return 
+
+        self._postOrder(root.left)
+        self._postOrder(root.right)
+        out.append(root.val)
+        return out
+    
+
 
     def floor(self, k: int) -> int:
         """ Returns the largest element that is less than or equal to k """
@@ -1843,3 +1894,14 @@ class HashTable:
     
     def __getCapacity(self) -> int: return self.capacity 
 
+tree = BST()
+tree.insert("C")
+tree.insert("D")
+tree.insert("B")
+tree.insert("A")
+tree.insert("F")
+tree.insert("G")
+tree.print()
+print(tree.postOrder())
+print(tree.preOrder())
+print(tree.inOrder())
